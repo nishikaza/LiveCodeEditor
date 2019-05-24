@@ -19,19 +19,29 @@
     "test:update": "just jest -u",
     "test:start": "just start-test",
     "start": "just start",
-    "stack:upgrade": "just upgrade-stack"
+    "stack:upgrade": "just upgrade-stack",
+    "webpack": "webpack"
   },
   "dependencies": {
     "@uifabric/fluent-theme": "^0.16.6",
+    "@uiw/react-monacoeditor": "^1.0.6",
+    "babel-core": "^6.26.3",
+    "monaco-editor": "^0.17.0",
     "office-ui-fabric-react": "^6.165.0",
+    "prismjs": "^1.16.0",
     "react": "~16.8.0",
-    "react-dom": "~16.8.0"
+    "react-dom": "~16.8.0",
+    "react-live": "^2.1.2",
+    "react-monaco-editor": "^0.25.1",
+    "react-simple-code-editor": "^0.9.10"
   },
   "devDependencies": {
     "@types/jest": "^24.0.0",
-    "@types/react-dom": "~16.8.0",
     "@types/react": "~16.8.0",
-    "just-stack-uifabric": ">=0.9.0"
+    "@types/react-dom": "~16.8.0",
+    "just-stack-uifabric": ">=0.9.0",
+    "ts-loader": "^6.0.1",
+    "typescript": "^3.4.5"
   },
   "just": {
     "stack": "just-stack-uifabric"

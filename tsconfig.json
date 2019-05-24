@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
+    "module": "es6",
     "target": "es5",
-    "module": "es2015",
-    "outDir": "./lib",
+    "outDir": "./dist/",
     "importHelpers": true,
     "downlevelIteration": true,
     "strict": true,
@@ -14,7 +14,8 @@
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "jsx": "react"
+    "jsx": "react",
+    "allowJs": true
   },
   "include": ["src/index.tsx", "typings/**/*.d.ts"]
 }
