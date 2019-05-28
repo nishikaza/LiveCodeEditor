@@ -27,6 +27,7 @@
     "@uifabric/fluent-theme": "^0.16.6",
     "@uiw/react-monacoeditor": "^1.0.6",
     "babel-core": "^6.26.3",
+    "babel-plugin-prismjs": "^1.0.2",
     "monaco-editor": "^0.17.0",
     "office-ui-fabric-react": "^6.165.0",
     "react": "~16.8.0",
