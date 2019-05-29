@@ -1,5 +1,5 @@
 import React from "react";
-import { Dropdown, IDropdownOption } from "office-ui-fabric-react";
+import { Dropdown, IDropdownOption, PrimaryButton } from "office-ui-fabric-react";
 import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
 import Editor from "react-simple-code-editor";
 import Prism from "prismjs";
@@ -17,7 +17,8 @@ const options: IDropdownOption[] = [
   { key: "24", text: "24" }
 ];
 
-const fontSize = 18;
+const fontSize = 14;
+const editorHidden = true;
 const code = `import React from 'react';
 import { css, classNamesFunction } from 'office-ui-fabric-react/lib/Utilities';
 import { getStyles, IButtonBasicExampleStyleProps, IButtonBasicExampleStyles } from './Button.Basic.Example.styles';
@@ -65,7 +66,7 @@ export class ButtonDefaultExample extends React.Component<IButtonProps, {}> {
 }`;
 
 export class App extends React.Component {
-  state = { code, options, fontSize };
+  state = { code, options, fontSize, editorHidden };
 
   private changeFontSize = (
     event: React.FormEvent,
@@ -77,10 +78,23 @@ export class App extends React.Component {
     }
   };
 
+  private buttonClicked = (): void => {
+    if (this.state.editorHidden == true) {
+      this.setState({editorHidden: false})
+    } else {
+      this.setState({editorHidden: true})
+    }
+  }
+
   render() {
     return (
       <div>
+        <PrimaryButton
+          text = "Edit component code"
+          onClick = {this.buttonClicked}
+        />
         <Editor
+          hidden = {this.state.editorHidden}
           value={this.state.code}
           onValueChange={code => this.setState({ code })}
           highlight={code =>
@@ -94,8 +108,10 @@ export class App extends React.Component {
           }}
         />
         <Dropdown
+          hidden = {this.state.editorHidden}
+          label = "Select code font size:"
           options={this.state.options}
-          defaultSelectedKey="18"
+          defaultSelectedKey="14"
           onChange={this.changeFontSize}
           styles={{ dropdown: { width: 100 } }}
         />
