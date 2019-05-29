@@ -1,25 +1,22 @@
-import React from 'react';
-import { Dropdown, IDropdownOption, Label } from 'office-ui-fabric-react';
-import { initializeIcons } from 'office-ui-fabric-react/lib/Icons';
-import Editor from 'react-simple-code-editor';
-import Prism from 'prismjs';
-require('prismjs/components/prism-typescript');
-import 'prismjs/themes/prism-tomorrow.css'
-// const hi = require('prismjs/components/prism-core')
-// import {highlight, languages} from 'prismjs/components/prism-core'
-initializeIcons()
-// const boldStyle = { root: { fontWeight: FontWeights.semibold } };
-// const prismLang = require('prismjs/components/prism-typescript');
-// const prismHighlight = require('prismjs');
+import React from "react";
+import { Dropdown, IDropdownOption } from "office-ui-fabric-react";
+import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
+import Editor from "react-simple-code-editor";
+import Prism from "prismjs";
+require("prismjs/components/prism-typescript");
+import "prismjs/themes/prism-tomorrow.css";
+initializeIcons();
+
 const options: IDropdownOption[] = [
-  { key: '12', text: '12'},
-  { key: '14', text: '14'},
-  { key: '16', text: '16'},
-  { key: '18', text: '18'},
-  { key: '20', text: '20'},
-  { key: '22', text: '22'},
-  { key: '24', text: '24'},
-]
+  { key: "12", text: "12" },
+  { key: "14", text: "14" },
+  { key: "16", text: "16" },
+  { key: "18", text: "18" },
+  { key: "20", text: "20" },
+  { key: "22", text: "22" },
+  { key: "24", text: "24" }
+];
+
 const fontSize = 18;
 const code = `import React from 'react';
 import { css, classNamesFunction } from 'office-ui-fabric-react/lib/Utilities';
@@ -67,39 +64,42 @@ export class ButtonDefaultExample extends React.Component<IButtonProps, {}> {
   }
 }`;
 
-
-export class App extends React.Component{
+export class App extends React.Component {
   state = { code, options, fontSize };
 
-  private changeFontSize = (event: React.FormEvent, option:IDropdownOption | undefined, index: number | undefined): void => {
-    if (typeof(index) != 'undefined') {
-      this.setState({fontSize: parseInt(options[index].key as string)});
+  private changeFontSize = (
+    event: React.FormEvent,
+    option: IDropdownOption | undefined,
+    index: number | undefined
+  ): void => {
+    if (typeof index != "undefined") {
+      this.setState({ fontSize: parseInt(options[index].key as string) });
     }
-  }
+  };
+
   render() {
-    return(
+    return (
       <div>
-      <Editor
-      value = { this.state.code }
-      onValueChange = {code => this.setState({code})}
-      highlight = {code =>Prism.highlight(code, Prism.languages.typescript, 'typescript')}
-      style = {{
-        fontFamily: "Consolas",
-        fontSize: this.state.fontSize,
-        color: "white",
-        background: "Black",
-      }}
-      ></Editor>
-      <Dropdown
-        options = {this.state.options}
-        defaultSelectedKey = '18'
-        onChange = {this.changeFontSize}
-        styles = {{dropdown: {width: 100}}}
-      >
-      </Dropdown>
-      <Label
-      ></Label>
+        <Editor
+          value={this.state.code}
+          onValueChange={code => this.setState({ code })}
+          highlight={code =>
+            Prism.highlight(code, Prism.languages.typescript, "typescript")
+          }
+          style={{
+            fontFamily: "Consolas",
+            fontSize: this.state.fontSize,
+            color: "white",
+            background: "Black"
+          }}
+        />
+        <Dropdown
+          options={this.state.options}
+          defaultSelectedKey="18"
+          onChange={this.changeFontSize}
+          styles={{ dropdown: { width: 100 } }}
+        />
       </div>
-    )
+    );
   }
 }
