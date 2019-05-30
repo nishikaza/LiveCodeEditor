@@ -14,7 +14,11 @@ const options: IDropdownOption[] = [
   { key: "18", text: "18" },
   { key: "20", text: "20" },
   { key: "22", text: "22" },
-  { key: "24", text: "24" }
+  { key: "24", text: "24" },
+  { key: "26", text: "26" },
+  { key: "28", text: "28" },
+  { key: "36", text: "36" },
+  { key: "48", text: "48" },
 ];
 
 const fontSize = 14;
