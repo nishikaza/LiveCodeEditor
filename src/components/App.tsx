@@ -1,5 +1,9 @@
 import React from "react";
-import { Dropdown, IDropdownOption, PrimaryButton } from "office-ui-fabric-react";
+import {
+  Dropdown,
+  IDropdownOption,
+  PrimaryButton
+} from "office-ui-fabric-react";
 import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
 import Editor from "react-simple-code-editor";
 import Prism from "prismjs";
@@ -14,7 +18,7 @@ const options: IDropdownOption[] = [
   { key: "18", text: "18" },
   { key: "20", text: "20" },
   { key: "22", text: "22" },
-  { key: "24", text: "24" },
+  { key: "24", text: "24" }
 ];
 
 const fontSize = 14;
@@ -80,21 +84,21 @@ export class App extends React.Component {
 
   private buttonClicked = (): void => {
     if (this.state.editorHidden == true) {
-      this.setState({editorHidden: false})
+      this.setState({ editorHidden: false });
     } else {
-      this.setState({editorHidden: true})
+      this.setState({ editorHidden: true });
     }
-  }
+  };
 
   render() {
     return (
       <div>
         <PrimaryButton
-          text = "Edit component code"
-          onClick = {this.buttonClicked}
+          text="Edit component code"
+          onClick={this.buttonClicked}
         />
         <Editor
-          hidden = {this.state.editorHidden}
+          hidden={this.state.editorHidden}
           value={this.state.code}
           onValueChange={code => this.setState({ code })}
           highlight={code =>
@@ -108,8 +112,8 @@ export class App extends React.Component {
           }}
         />
         <Dropdown
-          hidden = {this.state.editorHidden}
-          label = "Select code font size:"
+          hidden={this.state.editorHidden}
+          label="Select code font size:"
           options={this.state.options}
           defaultSelectedKey="14"
           onChange={this.changeFontSize}
