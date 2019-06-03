@@ -8,4 +8,9 @@ module.exports = webpackMerge(webpackServeConfig, htmlOverlay, {
         },
       ],
     },
+    node: {
+      fs: 'empty',
+      module: 'empty',
+      net: 'empty'
+    },
   });
