@@ -147,8 +147,7 @@ export class App extends React.Component {
     let TSeditor = (
         <div>
           <Label>Typescript + React editor</Label>
-          <LiveEditor/>
-          {/* <Editor
+          <Editor
           hidden={this.state.editorHidden}
           value={this.state.TScode}
           onValueChange={code => this.updateCode(code)}
@@ -161,7 +160,7 @@ export class App extends React.Component {
             color: "black",
             background: "#F3F2F0",
           }}
-        /> */}
+        />
         </div>
     );
     let JSeditor = (
