@@ -11,9 +11,9 @@ import Editor from "react-simple-code-editor";
 import Prism from "prismjs";
 require("prismjs/components/prism-typescript");
 import "prismjs/themes/prism.css";
-import * as babel from '@babel/core';
-//import LiveEditor from './Editor'
 initializeIcons();
+
+const babel =  require('@babel/standalone');
 
 const options: IDropdownOption[] = [
   { key: "12", text: "12" },
@@ -34,10 +34,11 @@ const babelOptions: babel.TransformOptions = {
   }
 }
 
+const JScode = '';
 const fontSize = 18;
 const editorHidden = true;
 const error = undefined;
-const code = `import React from 'react';
+const TScode = `import React from 'react';
 import { css, classNamesFunction } from 'office-ui-fabric-react/lib/Utilities';
 import { getStyles, IButtonBasicExampleStyleProps, IButtonBasicExampleStyles } from './Button.Basic.Example.styles';
 import { DefaultButton, PrimaryButton, IButtonProps } from 'office-ui-fabric-react/lib/Button';
@@ -88,7 +89,7 @@ export class ButtonDefaultExample extends React.Component<IButtonProps, {}> {
 // <{}, IAppState> }
 
 export class App extends React.Component {
-  state = { error, code, options, fontSize, editorHidden };
+  state = { error, TScode, JScode, options, fontSize, editorHidden };
 
   private changeFontSize = (
     event: React.FormEvent,
@@ -111,12 +112,14 @@ export class App extends React.Component {
   private updateCode = (code: string) => {
     try{
       this.setState({
-        code: babel.transform(code, babelOptions)!.code!,
+        TScode: code,
+        JScode: babel.transform(code, babelOptions)!.code!,
+        // code: transform(code, {plugins:["@babel/plugin-transform-runtime"]})!.code!,
         error: undefined
       })
     }catch(ex){
       this.setState({
-        code: code,
+        TScode: TScode,
         error: ex.message
       })
     }
@@ -146,7 +149,7 @@ export class App extends React.Component {
           <Label>Typescript + React editor</Label>
           <Editor
           hidden={this.state.editorHidden}
-          value={this.state.code}
+          value={this.state.TScode}
           onValueChange={code => this.updateCode(code)}
           highlight={code =>
             Prism.highlight(code, Prism.languages.typescript, "typescript")
@@ -165,7 +168,7 @@ export class App extends React.Component {
         <Label>Javascript Code</Label>
         <Editor
           hidden={this.state.editorHidden}
-          value={this.state.code}
+          value={this.state.JScode}
           onValueChange={code => code}
           highlight={code =>
             Prism.highlight(code, Prism.languages.typescript, "typescript")
