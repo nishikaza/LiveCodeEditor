@@ -10,8 +10,7 @@ import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
 import Editor from "react-simple-code-editor";
 import Prism from "prismjs";
 require("prismjs/components/prism-typescript");
-import "prismjs/themes/prism-tomorrow.css";
-// import {transform, TransformOptions} from '@babel/core';
+import "prismjs/themes/prism.css";
 initializeIcons();
 
 const babel =  require('@babel/standalone');
@@ -29,7 +28,7 @@ const options: IDropdownOption[] = [
 const babelOptions: babel.TransformOptions = {
   filename: 'fake.tsx',
   presets: ['typescript', 'react', 'es2015'],
-  plugins: ['proposal-class-properties', 'proposal-object-rest-spread'],
+  plugins: ['proposal-class-properties', 'proposal-object-rest-spread', "transform-class-properties"],
   parserOpts: {
     strictMode: true
   }
@@ -80,6 +79,14 @@ export class ButtonDefaultExample extends React.Component<IButtonProps, {}> {
     alert('Clicked');
   }
 }`;
+
+// interface IAppState {
+//   error: string,
+//   code: string,
+//   options: IDropdownOption[],
+//   fontSize: string,
+//   editorHidden: boolean
+// <{}, IAppState> }
 
 export class App extends React.Component {
   state = { error, TScode, JScode, options, fontSize, editorHidden };
@@ -140,7 +147,8 @@ export class App extends React.Component {
     let TSeditor = (
         <div>
           <Label>Typescript + React editor</Label>
-          <Editor
+          <LiveEditor/>
+          {/* <Editor
           hidden={this.state.editorHidden}
           value={this.state.TScode}
           onValueChange={code => this.updateCode(code)}
@@ -150,10 +158,10 @@ export class App extends React.Component {
           style={{
             fontFamily: "Consolas",
             fontSize: this.state.fontSize,
-            color: "white",
-            background: "Black"
+            color: "black",
+            background: "#F3F2F0",
           }}
-        />
+        /> */}
         </div>
     );
     let JSeditor = (
@@ -169,8 +177,8 @@ export class App extends React.Component {
           style={{
             fontFamily: "Consolas",
             fontSize: this.state.fontSize,
-            color: "white",
-            background: "Black"
+            color: "black",
+            background: "#F3F2F0"
           }}
         />
       </div>
