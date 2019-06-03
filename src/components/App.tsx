@@ -12,7 +12,7 @@ import Prism from "prismjs";
 require("prismjs/components/prism-typescript");
 import "prismjs/themes/prism.css";
 import * as babel from '@babel/core';
-import LiveEditor from './Editor'
+//import LiveEditor from './Editor'
 initializeIcons();
 
 const options: IDropdownOption[] = [
@@ -144,8 +144,7 @@ export class App extends React.Component {
     let TSeditor = (
         <div>
           <Label>Typescript + React editor</Label>
-          <LiveEditor/>
-          {/* <Editor
+          <Editor
           hidden={this.state.editorHidden}
           value={this.state.code}
           onValueChange={code => this.updateCode(code)}
@@ -158,7 +157,7 @@ export class App extends React.Component {
             color: "black",
             background: "#F3F2F0",
           }}
-        /> */}
+        />
         </div>
     );
     let JSeditor = (
