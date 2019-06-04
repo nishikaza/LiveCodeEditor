@@ -1,4 +1,8 @@
-const { webpackMerge, htmlOverlay, webpackServeConfig } = require('just-scripts');
+const {
+  webpackMerge,
+  htmlOverlay,
+  webpackServeConfig
+} = require("just-scripts");
 module.exports = webpackMerge(webpackServeConfig, htmlOverlay, {
     module: {
       rules: [
