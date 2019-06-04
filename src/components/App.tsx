@@ -11,7 +11,7 @@ import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
 import Editor from "react-simple-code-editor";
 import Prism from "prismjs";
 require("prismjs/components/prism-typescript");
-import "prismjs/themes/prism.css";
+import "./prism-modified.css";
 initializeIcons();
 
 const babel = require("@babel/standalone");
@@ -27,9 +27,9 @@ const options: IDropdownOption[] = [
 ];
 
 const babelOptions: babel.TransformOptions = {
-  filename: "fake.tsx",
-  presets: ["typescript", "react", "es2015"],
-  plugins: ["proposal-class-properties", "proposal-object-rest-spread"],
+  filename: 'fake.tsx',
+  presets: ['typescript', 'react', 'es2015'],
+  plugins: ['proposal-class-properties', 'proposal-object-rest-spread'],
   parserOpts: {
     strictMode: true
   }
@@ -59,8 +59,24 @@ const classNames = mergeStyleSets({
   }
 });
 
+interface IAppState {
+  code: string,
+  error?: string,
+  TScode: string,
+  JScode: string,
+  options: IDropdownOption[],
+  fontSize?: string,
+  editorHidden?: boolean
+}
+
 export class App extends React.Component {
-  state = { error, TScode, JScode, options, fontSize, editorHidden };
+
+  public state: IAppState = {
+    code: '',
+    TScode: '',
+    JScode: '',
+    options: options
+  }
 
   private changeFontSize = (
     event: React.FormEvent,
@@ -79,6 +95,35 @@ export class App extends React.Component {
       this.setState({ editorHidden: true });
     }
   };
+
+  public componentDidMount() {
+    this.updateCode(TScode);
+  }
+
+  public componentDidUpdate(prevProps: {}, prevState: IAppState) {
+    if (prevState.code != this.state.code) {
+      this.evaluateCode();
+    }
+  }
+
+  // private returnEditor = (): Editor => {
+  //   this.render() {
+  //     <Editor
+  //         hidden={this.state.editorHidden}
+  //         value={this.state.TScode}
+  //         onValueChange={code => this.updateCode(code)}
+  //         highlight={code =>
+  //           Prism.highlight(code, Prism.languages.typescript, "typescript")
+  //         }
+  //         style={{
+  //           fontFamily: "Consolas",
+  //           fontSize: this.state.fontSize,
+  //           color: "black",
+  //           background: "#F3F2F0",
+  //         }}
+  //       />
+  //   }
+  //       }
 
   private updateCode = (code: string) => {
     try {
@@ -101,6 +146,17 @@ export class App extends React.Component {
       return eval(this.state.JScode)
     }catch (ex){
       console.log(ex.message)
+    }
+  }
+
+  private evaluateCode() {
+    try {
+      console.log("made it to eval");
+      eval(this.state.JScode);
+      // console.log(eval(this.state.JScode));
+      this.setState({error: undefined});
+    } catch (ex) {
+      this.setState({error: ex.message})
     }
   }
 
@@ -185,7 +241,9 @@ export class App extends React.Component {
       <div>
         <PrimaryButton onClick={this.buttonClicked} />
         {!this.state.editorHidden && editor}
+        <div id = "output"/>
       </div>
+
     );
   }
 }

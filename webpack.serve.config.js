@@ -4,17 +4,25 @@ const {
   webpackServeConfig
 } = require("just-scripts");
 module.exports = webpackMerge(webpackServeConfig, htmlOverlay, {
-  module: {
-    rules: [
+    module: {
+      rules: [
+        {
+          test: /\.css$/,
+          use: ['style-loader', 'css-loader'],
+        },
+      ],
+    },
+    node: {
+      fs: 'empty',
+      module: 'empty',
+      net: 'empty'
+    },
+    externals: [
       {
-        test: /\.css$/,
-        use: ["style-loader", "css-loader"]
+        react: 'React'
+      },
+      {
+        'react-dom': 'ReactDOM'
       }
     ]
-  },
-  node: {
-    fs: "empty",
-    module: "empty",
-    net: "empty"
-  },
 });
