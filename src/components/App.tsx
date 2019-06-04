@@ -5,6 +5,7 @@ import {
   PrimaryButton,
   Stack,
   Label,
+  mergeStyleSets
 } from "office-ui-fabric-react";
 import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
 import Editor from "react-simple-code-editor";
@@ -13,7 +14,7 @@ require("prismjs/components/prism-typescript");
 import "prismjs/themes/prism.css";
 initializeIcons();
 
-const babel =  require('@babel/standalone');
+const babel = require("@babel/standalone");
 
 const options: IDropdownOption[] = [
   { key: "12", text: "12" },
@@ -26,67 +27,37 @@ const options: IDropdownOption[] = [
 ];
 
 const babelOptions: babel.TransformOptions = {
-  filename: 'fake.tsx',
-  presets: ['typescript', 'react', 'es2015'],
-  plugins: ['proposal-class-properties', 'proposal-object-rest-spread', "transform-class-properties"],
+  filename: "fake.tsx",
+  presets: ["typescript", "react", "es2015"],
+  plugins: ["proposal-class-properties", "proposal-object-rest-spread"],
   parserOpts: {
     strictMode: true
   }
-}
+};
 
-const JScode = '';
+const JScode = "";
 const fontSize = 18;
 const editorHidden = true;
 const error = undefined;
-const TScode = `import React from 'react';
-import { css, classNamesFunction } from 'office-ui-fabric-react/lib/Utilities';
-import { getStyles, IButtonBasicExampleStyleProps, IButtonBasicExampleStyles } from './Button.Basic.Example.styles';
-import { DefaultButton, PrimaryButton, IButtonProps } from 'office-ui-fabric-react/lib/Button';
-import { Label } from 'office-ui-fabric-react/lib/Label';
-const getClassNames = classNamesFunction<IButtonBasicExampleStyleProps, IButtonBasicExampleStyles>();
-export class ButtonDefaultExample extends React.Component<IButtonProps, {}> {
-  public render(): JSX.Element {
-    const { disabled, checked } = this.props;
-    const classNames = getClassNames(getStyles, {});
-    return (
-      <div className={css(classNames.twoup)}>
-        <div>
-          <Label>Standard</Label>
-          <DefaultButton
-            data-automation-id="test"
-            allowDisabledFocus={true}
-            disabled={disabled}
-            checked={checked}
-            text="Button"
-            onClick={this._alertClicked}
-          />
-        </div>
-        <div>
-          <Label>Primary</Label>
-          <PrimaryButton
-            data-automation-id="test"
-            disabled={disabled}
-            checked={checked}
-            text="Button"
-            onClick={this._alertClicked}
-            allowDisabledFocus={true}
-          />
-        </div>
-      </div>
-    );
-  }
-  private _alertClicked(): void {
-    alert('Clicked');
-  }
-}`;
+const TScode = `const text: string = "hello world";
+ReactDOM.render(<div>{text}</div>, document.getElementById('output'));`;
 
-// interface IAppState {
-//   error: string,
-//   code: string,
-//   options: IDropdownOption[],
-//   fontSize: string,
-//   editorHidden: boolean
-// <{}, IAppState> }
+const classNames = mergeStyleSets({
+  code: {
+    maxHeight: 500,
+    overflowY: "auto",
+    fontFamily: "monospace",
+    fontSize: 13,
+    lineHeight: "1.5"
+  },
+  renderSection:{
+    backgroundColor: 'red'
+  },
+  error: {
+    backgroundColor: "#FEF0F0",
+    color: "#FF5E79"
+  }
+});
 
 export class App extends React.Component {
   state = { error, TScode, JScode, options, fontSize, editorHidden };
@@ -110,18 +81,26 @@ export class App extends React.Component {
   };
 
   private updateCode = (code: string) => {
-    try{
+    try {
       this.setState({
         TScode: code,
         JScode: babel.transform(code, babelOptions)!.code!,
         // code: transform(code, {plugins:["@babel/plugin-transform-runtime"]})!.code!,
         error: undefined
-      })
-    }catch(ex){
+      });
+    } catch (ex) {
       this.setState({
-        TScode: TScode,
+        TScode: code,
         error: ex.message
-      })
+      });
+    }
+  };
+
+  private _eval = () => {
+    try{
+      return eval(this.state.JScode)
+    }catch (ex){
+      console.log(ex.message)
     }
   }
 
@@ -129,9 +108,7 @@ export class App extends React.Component {
     let dropdown = (
       <Stack horizontal padding={10} gap={10}>
         <Stack.Item>
-          <Label>
-            Select code font size:
-          </Label>
+          <Label>Select code font size:</Label>
         </Stack.Item>
         <Stack.Item>
           <Dropdown
@@ -139,15 +116,15 @@ export class App extends React.Component {
             defaultSelectedKey="18"
             onChange={this.changeFontSize}
             styles={{ dropdown: { width: 100 } }}
-            />
-          </Stack.Item>
+          />
+        </Stack.Item>
       </Stack>
     );
 
     let TSeditor = (
-        <div>
-          <Label>Typescript + React editor</Label>
-          <Editor
+      <div>
+        <Label>Typescript + React editor</Label>
+        <Editor
           hidden={this.state.editorHidden}
           value={this.state.TScode}
           onValueChange={code => this.updateCode(code)}
@@ -158,10 +135,10 @@ export class App extends React.Component {
             fontFamily: "Consolas",
             fontSize: this.state.fontSize,
             color: "black",
-            background: "#F3F2F0",
+            background: "#F3F2F0"
           }}
         />
-        </div>
+      </div>
     );
     let JSeditor = (
       <div>
@@ -181,30 +158,32 @@ export class App extends React.Component {
           }}
         />
       </div>
-  );
+    );
 
-  let editor = (
-    <Stack  style={{backgroundColor:'lightgray'}} gap={4}>
-      <Stack.Item >
-        {dropdown}
-      </Stack.Item>
-      <Stack.Item>
-        <Stack horizontal gap={40} padding={10}>
-          <Stack.Item>{TSeditor}</Stack.Item>
-          <Stack.Item>{JSeditor}</Stack.Item>
-        </Stack>
-      </Stack.Item>
-      <Stack.Item>
-        {this.state.error !== undefined && (<Label style={{backgroundColor: '#FEF0F0', color: '#FF5E79'}}>`{this.state.error}`</Label>)}
-      </Stack.Item>
-    </Stack>
-  )
+    let editor = (
+      <Stack style={{ backgroundColor: "lightgray" }} gap={4}>
+        <Stack.Item>{dropdown}</Stack.Item>
+        <Stack.Item>
+          <Stack horizontal gap={40} padding={10}>
+            <Stack.Item>{TSeditor}</Stack.Item>
+            <Stack.Item>
+              <pre className={classNames.renderSection}>
+                {this.state.error !== undefined && this._eval}
+              </pre>
+            </Stack.Item>
+          </Stack>
+        </Stack.Item>
+        <Stack.Item>
+          {this.state.error !== undefined && (
+            <Label className={classNames.error}>`{this.state.error}`</Label>
+          )}
+        </Stack.Item>
+      </Stack>
+    );
 
     return (
       <div>
-        <PrimaryButton
-            onClick={this.buttonClicked}
-          />
+        <PrimaryButton onClick={this.buttonClicked} />
         {!this.state.editorHidden && editor}
       </div>
     );
