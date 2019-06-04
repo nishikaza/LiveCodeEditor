@@ -14,6 +14,14 @@ const config = {
     module: 'empty',
     net: 'empty'
   },
+  externals: [
+    {
+      react: 'React'
+    },
+    {
+      'react-dom': 'ReactDOM'
+    }
+  ]
 }
 
 module.exports = webpackMerge(webpackConfig,config);

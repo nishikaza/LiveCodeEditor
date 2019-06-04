@@ -13,4 +13,13 @@ module.exports = webpackMerge(webpackServeConfig, htmlOverlay, {
       module: 'empty',
       net: 'empty'
     },
+    externals: [
+      {
+        react: 'React'
+      },
+      {
+        'react-dom': 'ReactDOM'
+      }
+    ]
+
   });

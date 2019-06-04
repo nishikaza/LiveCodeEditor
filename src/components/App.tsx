@@ -10,7 +10,7 @@ import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
 import Editor from "react-simple-code-editor";
 import Prism from "prismjs";
 require("prismjs/components/prism-typescript");
-import "prismjs/themes/prism.css";
+import "./prism-modified.css";
 initializeIcons();
 
 const babel =  require('@babel/standalone');
@@ -28,7 +28,7 @@ const options: IDropdownOption[] = [
 const babelOptions: babel.TransformOptions = {
   filename: 'fake.tsx',
   presets: ['typescript', 'react', 'es2015'],
-  plugins: ['proposal-class-properties', 'proposal-object-rest-spread', "transform-class-properties"],
+  plugins: ['proposal-class-properties', 'proposal-object-rest-spread'],
   parserOpts: {
     strictMode: true
   }
@@ -39,57 +39,28 @@ const fontSize = 18;
 const editorHidden = true;
 const error = undefined;
 const TScode = `import React from 'react';
-import { css, classNamesFunction } from 'office-ui-fabric-react/lib/Utilities';
-import { getStyles, IButtonBasicExampleStyleProps, IButtonBasicExampleStyles } from './Button.Basic.Example.styles';
-import { DefaultButton, PrimaryButton, IButtonProps } from 'office-ui-fabric-react/lib/Button';
-import { Label } from 'office-ui-fabric-react/lib/Label';
-const getClassNames = classNamesFunction<IButtonBasicExampleStyleProps, IButtonBasicExampleStyles>();
-export class ButtonDefaultExample extends React.Component<IButtonProps, {}> {
-  public render(): JSX.Element {
-    const { disabled, checked } = this.props;
-    const classNames = getClassNames(getStyles, {});
-    return (
-      <div className={css(classNames.twoup)}>
-        <div>
-          <Label>Standard</Label>
-          <DefaultButton
-            data-automation-id="test"
-            allowDisabledFocus={true}
-            disabled={disabled}
-            checked={checked}
-            text="Button"
-            onClick={this._alertClicked}
-          />
-        </div>
-        <div>
-          <Label>Primary</Label>
-          <PrimaryButton
-            data-automation-id="test"
-            disabled={disabled}
-            checked={checked}
-            text="Button"
-            onClick={this._alertClicked}
-            allowDisabledFocus={true}
-          />
-        </div>
-      </div>
-    );
-  }
-  private _alertClicked(): void {
-    alert('Clicked');
-  }
-}`;
+import { DefaultButton } from 'office-ui-fabric-react/lib/Button';
+const ExampleButton = () => <DefaultButton>Click</DefaultButton>
+export default ExampleButton;`;
 
-// interface IAppState {
-//   error: string,
-//   code: string,
-//   options: IDropdownOption[],
-//   fontSize: string,
-//   editorHidden: boolean
-// <{}, IAppState> }
+interface IAppState {
+  code: string,
+  error?: string,
+  TScode: string,
+  JScode: string,
+  options?: IDropdownOption[],
+  fontSize?: string,
+  editorHidden?: boolean
+}
 
 export class App extends React.Component {
-  state = { error, TScode, JScode, options, fontSize, editorHidden };
+
+  public state: IAppState = {
+    code: '',
+    TScode: '',
+    JScode: '',
+    options: options
+  }
 
   private changeFontSize = (
     event: React.FormEvent,
@@ -109,6 +80,35 @@ export class App extends React.Component {
     }
   };
 
+  public componentDidMount() {
+    this.updateCode(TScode);
+  }
+
+  public componentDidUpdate(prevProps: {}, prevState: IAppState) {
+    if (prevState.code != this.state.code) {
+      this.evaluateCode();
+    }
+  }
+
+  // private returnEditor = (): Editor => {
+  //   this.render() {
+  //     <Editor
+  //         hidden={this.state.editorHidden}
+  //         value={this.state.TScode}
+  //         onValueChange={code => this.updateCode(code)}
+  //         highlight={code =>
+  //           Prism.highlight(code, Prism.languages.typescript, "typescript")
+  //         }
+  //         style={{
+  //           fontFamily: "Consolas",
+  //           fontSize: this.state.fontSize,
+  //           color: "black",
+  //           background: "#F3F2F0",
+  //         }}
+  //       />
+  //   }
+  //       }
+
   private updateCode = (code: string) => {
     try{
       this.setState({
@@ -122,6 +122,15 @@ export class App extends React.Component {
         TScode: TScode,
         error: ex.message
       })
+    }
+  }
+
+  private evaluateCode() {
+    try {
+      eval(this.state.JScode);
+      this.setState({error: undefined});
+    } catch (ex) {
+      this.setState({error: ex.message})
     }
   }
 
@@ -183,6 +192,9 @@ export class App extends React.Component {
       </div>
   );
 
+  let ExampleButton = (
+    JScode
+  );
   let editor = (
     <Stack  style={{backgroundColor:'lightgray'}} gap={4}>
       <Stack.Item >
@@ -202,11 +214,14 @@ export class App extends React.Component {
 
     return (
       <div>
+        {/* <ExampleButton></ExampleButton> */}
         <PrimaryButton
             onClick={this.buttonClicked}
           />
         {!this.state.editorHidden && editor}
+        <div id = "output"/>
       </div>
+
     );
   }
 }
