@@ -38,7 +38,8 @@ const JScode = '';
 const fontSize = 18;
 const editorHidden = true;
 const error = undefined;
-const TScode = `import React from 'react';
+const TScode =
+`
 import { DefaultButton } from 'office-ui-fabric-react/lib/Button';
 const ExampleButton = () => <DefaultButton>Click</DefaultButton>
 export default ExampleButton;`;
@@ -117,6 +118,7 @@ export class App extends React.Component {
         // code: transform(code, {plugins:["@babel/plugin-transform-runtime"]})!.code!,
         error: undefined
       })
+      console.log("made it to update");
     }catch(ex){
       this.setState({
         TScode: TScode,
@@ -127,7 +129,9 @@ export class App extends React.Component {
 
   private evaluateCode() {
     try {
+      console.log("made it to eval");
       eval(this.state.JScode);
+      // console.log(eval(this.state.JScode));
       this.setState({error: undefined});
     } catch (ex) {
       this.setState({error: ex.message})

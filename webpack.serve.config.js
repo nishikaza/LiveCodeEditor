@@ -21,5 +21,4 @@ module.exports = webpackMerge(webpackServeConfig, htmlOverlay, {
         'react-dom': 'ReactDOM'
       }
     ]
-
-  });
+});
