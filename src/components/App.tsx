@@ -12,6 +12,13 @@ import Editor from "react-simple-code-editor";
 import Prism from "prismjs";
 require("prismjs/components/prism-typescript");
 import "./prism-modified.css";
+// import * as monaco from 'monaco-editor';
+// //require('monaco-editor/esm/vs/editor/browser/controller/coreCommands.js');
+// //require('monaco-editor/esm/vs/editor/contrib/find/findController.js');
+import MonacoEditor from 'react-monaco-editor';
+
+// require('monaco-editor/esm/vs/basic-languages/ypescript/typescript.contribution');
+
 initializeIcons();
 
 const babel = require("@babel/standalone");
@@ -69,6 +76,25 @@ interface IAppState {
   editorHidden?: boolean
 }
 
+// self.MonacoEnvironment = {
+// 	getWorkerUrl: function (moduleId, label) {
+// 		// if (label === 'json') {
+// 		// 	return './json.worker.bundle.js';
+// 		// }
+// 		// if (label === 'css') {
+// 		// 	return './css.worker.bundle.js';
+// 		// }
+// 		// if (label === 'html') {
+// 		// 	return './html.worker.bundle.js';
+// 		// }
+// 		// if (label === 'typescript' || label === 'javascript') {
+// 		// 	return './ts.worker.bundle.js';
+// 		// }
+// 		return './editor.worker.bundle.js';
+// 	}
+// }
+
+
 export class App extends React.Component {
 
   public state: IAppState = {
@@ -91,16 +117,26 @@ export class App extends React.Component {
   private buttonClicked = (): void => {
     if (this.state.editorHidden == true) {
       this.setState({ editorHidden: false });
+      // monaco.editor.create(document.getElementById("output") as HTMLElement, {
+      //   value: [
+      //     'function x() {',
+      //     '\tconsole.log("Hello world!");',
+      //     '}'
+      //   ].join('\n'),
+      //   language: 'javascript'
+      // });
     } else {
       this.setState({ editorHidden: true });
     }
   };
 
   public componentDidMount() {
+    console.log("mount");
     this.updateCode(TScode);
   }
 
   public componentDidUpdate(prevProps: {}, prevState: IAppState) {
+    console.log("update");
     if (prevState.code != this.state.code) {
       this.evaluateCode();
     }
@@ -177,11 +213,17 @@ export class App extends React.Component {
         </Stack.Item>
       </Stack>
     );
+        let TSeditor = (
 
-    let TSeditor = (
       <div>
         <Label>Typescript + React editor</Label>
-        <Editor
+        <MonacoEditor
+          width = "800"
+          height = "600"
+          language = "typescript"
+          theme = "vs-dark"
+        />
+        {/* <Editor
           hidden={this.state.editorHidden}
           value={this.state.TScode}
           onValueChange={code => this.updateCode(code)}
@@ -194,7 +236,7 @@ export class App extends React.Component {
             color: "black",
             background: "#F3F2F0"
           }}
-        />
+        /> */}
       </div>
     );
     let JSeditor = (
@@ -246,5 +288,7 @@ export class App extends React.Component {
       </div>
 
     );
+
+
   }
 }
