@@ -8,10 +8,6 @@ import {
   mergeStyleSets
 } from "office-ui-fabric-react";
 import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
-import Editor from "react-simple-code-editor";
-import Prism from "prismjs";
-require("prismjs/components/prism-typescript");
-import "./prism-modified.css";
 // import * as monaco from 'monaco-editor';
 // //require('monaco-editor/esm/vs/editor/browser/controller/coreCommands.js');
 // //require('monaco-editor/esm/vs/editor/contrib/find/findController.js');
@@ -142,25 +138,6 @@ export class App extends React.Component {
     }
   }
 
-  // private returnEditor = (): Editor => {
-  //   this.render() {
-  //     <Editor
-  //         hidden={this.state.editorHidden}
-  //         value={this.state.TScode}
-  //         onValueChange={code => this.updateCode(code)}
-  //         highlight={code =>
-  //           Prism.highlight(code, Prism.languages.typescript, "typescript")
-  //         }
-  //         style={{
-  //           fontFamily: "Consolas",
-  //           fontSize: this.state.fontSize,
-  //           color: "black",
-  //           background: "#F3F2F0",
-  //         }}
-  //       />
-  //   }
-  //       }
-
   private updateCode = (code: string) => {
     try {
       console.log("updating...");
@@ -222,39 +199,7 @@ export class App extends React.Component {
           height = "600"
           language = "typescript"
           theme = "vs-dark"
-        />
-        {/* <Editor
-          hidden={this.state.editorHidden}
-          value={this.state.TScode}
-          onValueChange={code => this.updateCode(code)}
-          highlight={code =>
-            Prism.highlight(code, Prism.languages.typescript, "typescript")
-          }
-          style={{
-            fontFamily: "Consolas",
-            fontSize: this.state.fontSize,
-            color: "black",
-            background: "#F3F2F0"
-          }}
-        /> */}
-      </div>
-    );
-    let JSeditor = (
-      <div>
-        <Label>Javascript Code</Label>
-        <Editor
-          hidden={this.state.editorHidden}
-          value={this.state.JScode}
-          onValueChange={code => code}
-          highlight={code =>
-            Prism.highlight(code, Prism.languages.typescript, "typescript")
-          }
-          style={{
-            fontFamily: "Consolas",
-            fontSize: this.state.fontSize,
-            color: "black",
-            background: "#F3F2F0"
-          }}
+          value = {this.state.code}
         />
       </div>
     );
