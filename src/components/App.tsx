@@ -127,6 +127,7 @@ export class App extends React.Component {
 
   private updateCode = (code: string) => {
     try {
+      console.log("updating...");
       this.setState({
         TScode: code,
         JScode: babel.transform(code, babelOptions)!.code!,
