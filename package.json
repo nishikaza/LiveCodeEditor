@@ -32,9 +32,11 @@
     "babel-loader": "^8.0.6",
     "babel-plugin-prismjs": "^1.0.2",
     "babel-preset-react": "^6.24.1",
+    "codemirror": "^5.47.0",
     "office-ui-fabric-react": "^6.165.0",
     "prismjs": "^1.16.0",
     "react": "~16.8.0",
+    "react-codemirror": "^1.0.0",
     "react-dom": "~16.8.0",
     "react-simple-code-editor": "^0.9.10"
   },

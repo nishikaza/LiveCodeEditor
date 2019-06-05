@@ -14,6 +14,10 @@ require("prismjs/components/prism-typescript");
 import "./prism-modified.css";
 initializeIcons();
 
+const CodeMirror = require('react-codemirror');
+require('codemirror/lib/codemirror.css');
+require('codemirror/mode/javascript/javascript');
+
 const babel = require("@babel/standalone");
 
 const options: IDropdownOption[] = [
@@ -35,10 +39,10 @@ const babelOptions: babel.TransformOptions = {
   }
 };
 
-const JScode = "";
-const fontSize = 18;
-const editorHidden = true;
-const error = undefined;
+// const JScode = "";
+// const fontSize = 18;
+// const editorHidden = true;
+// const error = undefined;
 const TScode = `const text: string = "hello world";
 ReactDOM.render(<div>{text}</div>, document.getElementById('output'));`;
 
@@ -181,41 +185,33 @@ export class App extends React.Component {
     let TSeditor = (
       <div>
         <Label>Typescript + React editor</Label>
-        <Editor
-          hidden={this.state.editorHidden}
-          value={this.state.TScode}
-          onValueChange={code => this.updateCode(code)}
-          highlight={code =>
-            Prism.highlight(code, Prism.languages.typescript, "typescript")
-          }
-          style={{
-            fontFamily: "Consolas",
-            fontSize: this.state.fontSize,
-            color: "black",
-            background: "#F3F2F0"
-          }}
+        <CodeMirror
+          value = {this.state.TScode}
+          // onChange = {this.updateCode(TScode)}
+          options = {{lineNumbers: true, maxHeight: 300}}
+          mode = "javascript"
         />
       </div>
     );
-    let JSeditor = (
-      <div>
-        <Label>Javascript Code</Label>
-        <Editor
-          hidden={this.state.editorHidden}
-          value={this.state.JScode}
-          onValueChange={code => code}
-          highlight={code =>
-            Prism.highlight(code, Prism.languages.typescript, "typescript")
-          }
-          style={{
-            fontFamily: "Consolas",
-            fontSize: this.state.fontSize,
-            color: "black",
-            background: "#F3F2F0"
-          }}
-        />
-      </div>
-    );
+    // let JSeditor = (
+    //   <div>
+    //     <Label>Javascript Code</Label>
+    //     <Editor
+    //       hidden={this.state.editorHidden}
+    //       value={this.state.JScode}
+    //       onValueChange={code => code}
+    //       highlight={code =>
+    //         Prism.highlight(code, Prism.languages.typescript, "typescript")
+    //       }
+    //       style={{
+    //         fontFamily: "Consolas",
+    //         fontSize: this.state.fontSize,
+    //         color: "black",
+    //         background: "#F3F2F0"
+    //       }}
+    //     />
+    //   </div>
+    // );
 
     let editor = (
       <Stack style={{ backgroundColor: "lightgray" }} gap={4}>
