@@ -35,10 +35,10 @@ const babelOptions: babel.TransformOptions = {
   }
 };
 
-const JScode = "";
-const fontSize = 18;
-const editorHidden = true;
-const error = undefined;
+// const JScode = "";
+// const fontSize = 18;
+// const editorHidden = true;
+// const error = undefined;
 const TScode = `const text: string = "hello world";
 ReactDOM.render(<div>{text}</div>, document.getElementById('output'));`;
 
@@ -197,25 +197,25 @@ export class App extends React.Component {
         />
       </div>
     );
-    let JSeditor = (
-      <div>
-        <Label>Javascript Code</Label>
-        <Editor
-          hidden={this.state.editorHidden}
-          value={this.state.JScode}
-          onValueChange={code => code}
-          highlight={code =>
-            Prism.highlight(code, Prism.languages.typescript, "typescript")
-          }
-          style={{
-            fontFamily: "Consolas",
-            fontSize: this.state.fontSize,
-            color: "black",
-            background: "#F3F2F0"
-          }}
-        />
-      </div>
-    );
+    // let JSeditor = (
+    //   <div>
+    //     <Label>Javascript Code</Label>
+    //     <Editor
+    //       hidden={this.state.editorHidden}
+    //       value={this.state.JScode}
+    //       onValueChange={code => code}
+    //       highlight={code =>
+    //         Prism.highlight(code, Prism.languages.typescript, "typescript")
+    //       }
+    //       style={{
+    //         fontFamily: "Consolas",
+    //         fontSize: this.state.fontSize,
+    //         color: "black",
+    //         background: "#F3F2F0"
+    //       }}
+    //     />
+    //   </div>
+    // );
 
     let editor = (
       <Stack style={{ backgroundColor: "lightgray" }} gap={4}>
