@@ -11,7 +11,7 @@ import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
 // import * as monaco from 'monaco-editor';
 // //require('monaco-editor/esm/vs/editor/browser/controller/coreCommands.js');
 // //require('monaco-editor/esm/vs/editor/contrib/find/findController.js');
-import MonacoEditor from 'react-monaco-editor';
+import MonacoEditor from "react-monaco-editor";
 
 // require('monaco-editor/esm/vs/basic-languages/ypescript/typescript.contribution');
 
@@ -30,19 +30,15 @@ const options: IDropdownOption[] = [
 ];
 
 const babelOptions: babel.TransformOptions = {
-  filename: 'fake.tsx',
-  presets: ['typescript', 'react', 'es2015'],
-  plugins: ['proposal-class-properties', 'proposal-object-rest-spread'],
+  filename: "fake.tsx",
+  presets: ["typescript", "react", "es2015"],
+  plugins: ["proposal-class-properties", "proposal-object-rest-spread"],
   parserOpts: {
     strictMode: true
   }
 };
 
-const JScode = "";
-const fontSize = 18;
-const editorHidden = true;
-const error = undefined;
-const TScode = `const text: string = "hello world";
+const initialCode = `const text: string = "hello world";
 ReactDOM.render(<div>{text}</div>, document.getElementById('output'));`;
 
 const classNames = mergeStyleSets({
@@ -53,8 +49,8 @@ const classNames = mergeStyleSets({
     fontSize: 13,
     lineHeight: "1.5"
   },
-  renderSection:{
-    backgroundColor: 'red'
+  renderSection: {
+    backgroundColor: "red"
   },
   error: {
     backgroundColor: "#FEF0F0",
@@ -64,12 +60,11 @@ const classNames = mergeStyleSets({
 
 interface IAppState {
   code: string,
-  error?: string,
-  TScode: string,
   JScode: string,
+  error?: string,
   options: IDropdownOption[],
   fontSize?: string,
-  editorHidden?: boolean
+  editorHidden?: boolean,
 }
 
 // self.MonacoEnvironment = {
@@ -90,14 +85,11 @@ interface IAppState {
 // 	}
 // }
 
-
 export class App extends React.Component {
-
   public state: IAppState = {
     code: '',
-    TScode: '',
     JScode: '',
-    options: options
+    options: options,
   }
 
   private changeFontSize = (
@@ -127,29 +119,25 @@ export class App extends React.Component {
   };
 
   public componentDidMount() {
-    console.log("mount");
-    this.updateCode(TScode);
+    this.updateCode(initialCode);
   }
 
   public componentDidUpdate(prevProps: {}, prevState: IAppState) {
-    console.log("update");
-    if (prevState.code != this.state.code) {
-      this.evaluateCode();
+    if (prevState.code !== this.state.code) {
+      this._eval();
     }
   }
 
   private updateCode = (code: string) => {
     try {
-      console.log("updating...");
       this.setState({
-        TScode: code,
+        code: code,
         JScode: babel.transform(code, babelOptions)!.code!,
-        // code: transform(code, {plugins:["@babel/plugin-transform-runtime"]})!.code!,
         error: undefined
       });
     } catch (ex) {
       this.setState({
-        TScode: code,
+        code: code,
         error: ex.message
       });
     }
@@ -157,20 +145,14 @@ export class App extends React.Component {
 
   private _eval = () => {
     try{
-      return eval(this.state.JScode)
-    }catch (ex){
-      console.log(ex.message)
-    }
-  }
-
-  private evaluateCode() {
-    try {
-      console.log("made it to eval");
       eval(this.state.JScode);
-      // console.log(eval(this.state.JScode));
-      this.setState({error: undefined});
-    } catch (ex) {
-      this.setState({error: ex.message})
+      this.setState({
+        error: undefined
+      })
+    }catch (ex){
+      this.setState({
+        error: ex.message
+      })
     }
   }
 
@@ -190,16 +172,17 @@ export class App extends React.Component {
         </Stack.Item>
       </Stack>
     );
-        let TSeditor = (
 
+    let TSeditor = (
       <div>
         <Label>Typescript + React editor</Label>
         <MonacoEditor
-          width = "800"
-          height = "600"
-          language = "typescript"
-          theme = "vs-dark"
-          value = {this.state.code}
+          width="800"
+          height="600"
+          language="typescript"
+          theme="vs-dark"
+          value={this.state.code}
+          onChange={code => this.updateCode(code)}
         />
       </div>
     );
@@ -207,15 +190,9 @@ export class App extends React.Component {
     let editor = (
       <Stack style={{ backgroundColor: "lightgray" }} gap={4}>
         <Stack.Item>{dropdown}</Stack.Item>
+        <Stack.Item>{TSeditor}</Stack.Item>
         <Stack.Item>
-          <Stack horizontal gap={40} padding={10}>
-            <Stack.Item>{TSeditor}</Stack.Item>
-            <Stack.Item>
-              <pre className={classNames.renderSection}>
-                {this.state.error !== undefined && this._eval}
-              </pre>
-            </Stack.Item>
-          </Stack>
+          <div id="output" />
         </Stack.Item>
         <Stack.Item>
           {this.state.error !== undefined && (
@@ -229,11 +206,7 @@ export class App extends React.Component {
       <div>
         <PrimaryButton onClick={this.buttonClicked} />
         {!this.state.editorHidden && editor}
-        <div id = "output"/>
       </div>
-
     );
-
-
   }
 }
