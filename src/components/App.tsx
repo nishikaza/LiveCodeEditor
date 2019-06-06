@@ -8,15 +8,15 @@ import {
   mergeStyleSets
 } from "office-ui-fabric-react";
 import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
-import Editor from "react-simple-code-editor";
-import Prism from "prismjs";
-require("prismjs/components/prism-typescript");
-import "./prism-modified.css";
+// import Editor from "react-simple-code-editor";
+// import Prism from "prismjs";
+// require("prismjs/components/prism-typescript");
+// import "./prism-modified.css";
 initializeIcons();
 
-const CodeMirror = require('react-codemirror');
-require('codemirror/lib/codemirror.css');
-require('codemirror/mode/javascript/javascript');
+const CodeMirror = require("react-codemirror");
+require("codemirror/lib/codemirror.css");
+require("codemirror/mode/javascript/javascript");
 
 const babel = require("@babel/standalone");
 
@@ -31,19 +31,15 @@ const options: IDropdownOption[] = [
 ];
 
 const babelOptions: babel.TransformOptions = {
-  filename: 'fake.tsx',
-  presets: ['typescript', 'react', 'es2015'],
-  plugins: ['proposal-class-properties', 'proposal-object-rest-spread'],
+  filename: "fake.tsx",
+  presets: ["typescript", "react", "es2015"],
+  plugins: ["proposal-class-properties", "proposal-object-rest-spread"],
   parserOpts: {
     strictMode: true
   }
 };
 
-// const JScode = "";
-// const fontSize = 18;
-// const editorHidden = true;
-// const error = undefined;
-const TScode = `const text: string = "hello world";
+const initialCode = `const text: string = "hello world";
 ReactDOM.render(<div>{text}</div>, document.getElementById('output'));`;
 
 const classNames = mergeStyleSets({
@@ -54,8 +50,8 @@ const classNames = mergeStyleSets({
     fontSize: 13,
     lineHeight: "1.5"
   },
-  renderSection:{
-    backgroundColor: 'red'
+  renderSection: {
+    backgroundColor: "red"
   },
   error: {
     backgroundColor: "#FEF0F0",
@@ -64,23 +60,20 @@ const classNames = mergeStyleSets({
 });
 
 interface IAppState {
-  code: string,
-  error?: string,
-  TScode: string,
-  JScode: string,
-  options: IDropdownOption[],
-  fontSize?: string,
-  editorHidden?: boolean
+  code: string;
+  JScode: string;
+  error?: string;
+  options: IDropdownOption[];
+  fontSize?: string;
+  editorHidden?: boolean;
 }
 
 export class App extends React.Component {
-
   public state: IAppState = {
-    code: '',
-    TScode: '',
-    JScode: '',
+    code: "",
+    JScode: "",
     options: options
-  }
+  };
 
   private changeFontSize = (
     event: React.FormEvent,
@@ -101,69 +94,42 @@ export class App extends React.Component {
   };
 
   public componentDidMount() {
-    this.updateCode(TScode);
+    this.updateCode(initialCode);
   }
 
   public componentDidUpdate(prevProps: {}, prevState: IAppState) {
-    if (prevState.code != this.state.code) {
-      this.evaluateCode();
+    if (prevState.code !== this.state.code) {
+      this._eval();
     }
   }
 
-  // private returnEditor = (): Editor => {
-  //   this.render() {
-  //     <Editor
-  //         hidden={this.state.editorHidden}
-  //         value={this.state.TScode}
-  //         onValueChange={code => this.updateCode(code)}
-  //         highlight={code =>
-  //           Prism.highlight(code, Prism.languages.typescript, "typescript")
-  //         }
-  //         style={{
-  //           fontFamily: "Consolas",
-  //           fontSize: this.state.fontSize,
-  //           color: "black",
-  //           background: "#F3F2F0",
-  //         }}
-  //       />
-  //   }
-  //       }
-
   private updateCode = (code: string) => {
     try {
-      console.log("updating...");
       this.setState({
-        TScode: code,
+        code: code,
         JScode: babel.transform(code, babelOptions)!.code!,
-        // code: transform(code, {plugins:["@babel/plugin-transform-runtime"]})!.code!,
         error: undefined
       });
     } catch (ex) {
       this.setState({
-        TScode: code,
+        code: code,
         error: ex.message
       });
     }
   };
 
   private _eval = () => {
-    try{
-      return eval(this.state.JScode)
-    }catch (ex){
-      console.log(ex.message)
-    }
-  }
-
-  private evaluateCode() {
     try {
-      console.log("made it to eval");
       eval(this.state.JScode);
-      // console.log(eval(this.state.JScode));
-      this.setState({error: undefined});
+      this.setState({
+        error: undefined
+      });
     } catch (ex) {
-      this.setState({error: ex.message})
+      this.setState({
+        error: ex.message
+      });
     }
-  }
+  };
 
   render() {
     let dropdown = (
@@ -186,45 +152,20 @@ export class App extends React.Component {
       <div>
         <Label>Typescript + React editor</Label>
         <CodeMirror
-          value = {this.state.TScode}
-          // onChange = {this.updateCode(TScode)}
-          options = {{lineNumbers: true, maxHeight: 300}}
-          mode = "javascript"
+          value={initialCode}
+          onChange={this.updateCode}
+          options={{ lineNumbers: true, maxHeight: 300, width: 500 }}
+          mode="javascript"
         />
       </div>
     );
-    // let JSeditor = (
-    //   <div>
-    //     <Label>Javascript Code</Label>
-    //     <Editor
-    //       hidden={this.state.editorHidden}
-    //       value={this.state.JScode}
-    //       onValueChange={code => code}
-    //       highlight={code =>
-    //         Prism.highlight(code, Prism.languages.typescript, "typescript")
-    //       }
-    //       style={{
-    //         fontFamily: "Consolas",
-    //         fontSize: this.state.fontSize,
-    //         color: "black",
-    //         background: "#F3F2F0"
-    //       }}
-    //     />
-    //   </div>
-    // );
 
     let editor = (
       <Stack style={{ backgroundColor: "lightgray" }} gap={4}>
         <Stack.Item>{dropdown}</Stack.Item>
+        <Stack.Item>{TSeditor}</Stack.Item>
         <Stack.Item>
-          <Stack horizontal gap={40} padding={10}>
-            <Stack.Item>{TSeditor}</Stack.Item>
-            <Stack.Item>
-              <pre className={classNames.renderSection}>
-                {this.state.error !== undefined && this._eval}
-              </pre>
-            </Stack.Item>
-          </Stack>
+          <div id="output" />
         </Stack.Item>
         <Stack.Item>
           {this.state.error !== undefined && (
@@ -238,9 +179,7 @@ export class App extends React.Component {
       <div>
         <PrimaryButton onClick={this.buttonClicked} />
         {!this.state.editorHidden && editor}
-        <div id = "output"/>
       </div>
-
     );
   }
 }
