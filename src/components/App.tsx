@@ -8,11 +8,15 @@ import {
   mergeStyleSets
 } from "office-ui-fabric-react";
 import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
-import Editor from "react-simple-code-editor";
-import Prism from "prismjs";
-require("prismjs/components/prism-typescript");
-import "./prism-modified.css";
+// import Editor from "react-simple-code-editor";
+// import Prism from "prismjs";
+// require("prismjs/components/prism-typescript");
+// import "./prism-modified.css";
 initializeIcons();
+
+const CodeMirror = require("react-codemirror");
+require("codemirror/lib/codemirror.css");
+require("codemirror/mode/javascript/javascript");
 
 const babel = require("@babel/standalone");
 
@@ -27,9 +31,9 @@ const options: IDropdownOption[] = [
 ];
 
 const babelOptions: babel.TransformOptions = {
-  filename: 'fake.tsx',
-  presets: ['typescript', 'react', 'es2015'],
-  plugins: ['proposal-class-properties', 'proposal-object-rest-spread'],
+  filename: "fake.tsx",
+  presets: ["typescript", "react", "es2015"],
+  plugins: ["proposal-class-properties", "proposal-object-rest-spread"],
   parserOpts: {
     strictMode: true
   }
@@ -44,8 +48,8 @@ const classNames = mergeStyleSets({
     fontSize: 13,
     lineHeight: "1.5"
   },
-  renderSection:{
-    backgroundColor: 'red'
+  renderSection: {
+    backgroundColor: "red"
   },
   error: {
     backgroundColor: "#FEF0F0",
@@ -63,7 +67,6 @@ interface IAppState {
 }
 
 export class App extends React.Component {
-
   public state: IAppState = {
     code: '',
     JScode: '',
@@ -124,7 +127,7 @@ export class App extends React.Component {
         error: ex.message
       })
     }
-  }
+  };
 
   render() {
     let dropdown = (
@@ -146,19 +149,11 @@ export class App extends React.Component {
     let TSeditor = (
       <div>
         <Label>Typescript + React editor</Label>
-        <Editor
-          value={this.state.code}
-          onValueChange={code => this.updateCode(code)}
-          highlight={code =>
-            Prism.highlight(code, Prism.languages.typescript, "typescript")
-          }
-          className={classNames.code}
-          style={{
-            fontFamily: "Consolas",
-            fontSize: this.state.fontSize,
-            color: "black",
-            background: "#F3F2F0"
-          }}
+        <CodeMirror
+          value={initialCode}
+          onChange={this.updateCode}
+          options={{ lineNumbers: true, maxHeight: 300, width: 500 }}
+          mode="javascript"
         />
       </div>
     );
@@ -167,7 +162,9 @@ export class App extends React.Component {
       <Stack style={{ backgroundColor: "lightgray" }} gap={4}>
         <Stack.Item>{dropdown}</Stack.Item>
         <Stack.Item>{TSeditor}</Stack.Item>
-        <Stack.Item><div id="output"/></Stack.Item>
+        <Stack.Item>
+          <div id="output" />
+        </Stack.Item>
         <Stack.Item>
           {this.state.error !== undefined && (
             <Label className={classNames.error}>`{this.state.error}`</Label>
