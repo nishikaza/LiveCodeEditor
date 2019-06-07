@@ -27,7 +27,6 @@
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.3.3",
     "@babel/standalone": "^7.4.5",
-    "@types/prismjs": "^1.16.0",
     "@uifabric/fluent-theme": "^0.16.6",
     "babel-loader": "^8.0.6",
     "babel-plugin-prismjs": "^1.0.2",
@@ -35,11 +34,8 @@
     "monaco-editor": "^0.17.0",
     "monaco-editor-webpack-plugin": "^1.7.0",
     "office-ui-fabric-react": "^6.165.0",
-    "prismjs": "^1.16.0",
     "react": "~16.8.0",
-    "react-dom": "~16.8.0",
-    "react-monaco-editor": "^0.26.2",
-    "react-simple-code-editor": "^0.9.10"
+    "react-dom": "~16.8.0"
   },
   "devDependencies": {
     "@types/jest": "^24.0.0",

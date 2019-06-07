@@ -8,12 +8,6 @@ import {
   mergeStyleSets
 } from "office-ui-fabric-react";
 import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
-// import * as monaco from 'monaco-editor';
-// //require('monaco-editor/esm/vs/editor/browser/controller/coreCommands.js');
-// //require('monaco-editor/esm/vs/editor/contrib/find/findController.js');
-import MonacoEditor from 'react-monaco-editor';
-
-// require('monaco-editor/esm/vs/basic-languages/ypescript/typescript.contribution');
 
 initializeIcons();
 
@@ -38,10 +32,10 @@ const babelOptions: babel.TransformOptions = {
   }
 };
 
-const JScode = "";
-const fontSize = 18;
-const editorHidden = true;
-const error = undefined;
+// const JScode = "";
+// const fontSize = 18;
+// const editorHidden = true;
+// const error = undefined;
 const TScode = `const text: string = "hello world";
 ReactDOM.render(<div>{text}</div>, document.getElementById('output'));`;
 
@@ -72,25 +66,6 @@ interface IAppState {
   editorHidden?: boolean
 }
 
-// self.MonacoEnvironment = {
-// 	getWorkerUrl: function (moduleId, label) {
-// 		// if (label === 'json') {
-// 		// 	return './json.worker.bundle.js';
-// 		// }
-// 		// if (label === 'css') {
-// 		// 	return './css.worker.bundle.js';
-// 		// }
-// 		// if (label === 'html') {
-// 		// 	return './html.worker.bundle.js';
-// 		// }
-// 		// if (label === 'typescript' || label === 'javascript') {
-// 		// 	return './ts.worker.bundle.js';
-// 		// }
-// 		return './editor.worker.bundle.js';
-// 	}
-// }
-
-
 export class App extends React.Component {
 
   public state: IAppState = {
@@ -113,14 +88,6 @@ export class App extends React.Component {
   private buttonClicked = (): void => {
     if (this.state.editorHidden == true) {
       this.setState({ editorHidden: false });
-      // monaco.editor.create(document.getElementById("output") as HTMLElement, {
-      //   value: [
-      //     'function x() {',
-      //     '\tconsole.log("Hello world!");',
-      //     '}'
-      //   ].join('\n'),
-      //   language: 'javascript'
-      // });
     } else {
       this.setState({ editorHidden: true });
     }
@@ -144,7 +111,6 @@ export class App extends React.Component {
       this.setState({
         TScode: code,
         JScode: babel.transform(code, babelOptions)!.code!,
-        // code: transform(code, {plugins:["@babel/plugin-transform-runtime"]})!.code!,
         error: undefined
       });
     } catch (ex) {
@@ -167,7 +133,6 @@ export class App extends React.Component {
     try {
       console.log("made it to eval");
       eval(this.state.JScode);
-      // console.log(eval(this.state.JScode));
       this.setState({error: undefined});
     } catch (ex) {
       this.setState({error: ex.message})
@@ -194,13 +159,6 @@ export class App extends React.Component {
 
       <div>
         <Label>Typescript + React editor</Label>
-        <MonacoEditor
-          width = "800"
-          height = "600"
-          language = "typescript"
-          theme = "vs-dark"
-          value = {this.state.code}
-        />
       </div>
     );
 
