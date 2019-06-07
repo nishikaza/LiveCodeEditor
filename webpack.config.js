@@ -1,4 +1,6 @@
 const { webpackConfig, webpackMerge } = require("just-scripts");
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
+  .BundleAnalyzerPlugin;
 
 const config = {
   module: {
@@ -16,12 +18,13 @@ const config = {
   },
   externals: [
     {
-      react: 'React'
+      react: "React"
     },
     {
-      'react-dom': 'ReactDOM'
+      "react-dom": "ReactDOM"
     }
-  ]
+  ],
+  plugins: [new BundleAnalyzerPlugin()]
 };
 
 module.exports = webpackMerge(webpackConfig, config);
