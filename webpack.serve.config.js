@@ -3,6 +3,7 @@ const {
   htmlOverlay,
   webpackServeConfig
 } = require("just-scripts");
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 module.exports = webpackMerge(webpackServeConfig, htmlOverlay, {
     module: {
       rules: [
@@ -17,6 +18,9 @@ module.exports = webpackMerge(webpackServeConfig, htmlOverlay, {
       module: 'empty',
       net: 'empty'
     },
+    plugins: [
+      new BundleAnalyzerPlugin()
+    ],
     externals: [
       {
         react: 'React'
