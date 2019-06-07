@@ -2,6 +2,8 @@ const { webpackConfig, webpackMerge } = require("just-scripts");
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
+const path = require('path');
+
 const config = {
   module: {
     rules: [
@@ -27,7 +29,7 @@ const config = {
   plugins: [
     new MonacoWebpackPlugin({
       // available options are documented at https://github.com/Microsoft/monaco-editor-webpack-plugin#options
-      languages: ['typescript']
+      languages: ['typescript', 'javascript']
     }),
     new BundleAnalyzerPlugin()
   ]
