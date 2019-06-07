@@ -4,7 +4,7 @@ import { App } from './components/App';
 import { mergeStyles } from '@uifabric/styling';
 import { FluentCustomizations } from '@uifabric/fluent-theme';
 import { Customizer } from 'office-ui-fabric-react';
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+// import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 //require('monaco-editor/esm/vs/basic-languages/ypescript/typescript.contribution');
 require('monaco-editor/esm/vs/editor/browser/controller/coreCommands.js');
 require('monaco-editor/esm/vs/editor/contrib/find/findController.js');
@@ -28,11 +28,4 @@ ReactDOM.render(
   document.getElementById('app')
 );
 
-monaco.editor.create(document.getElementById('app') as HTMLElement, {
-  value: [
-    'function x() {',
-    '\tconsole.log("Hello world!");',
-    '}'
-  ].join('\n'),
-  language: 'typescript'
-});
+
