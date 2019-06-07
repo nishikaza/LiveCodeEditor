@@ -44,8 +44,6 @@ ReactDOM.render(<div>{text}</div>, document.getElementById('output'));`;
 
 const classNames = mergeStyleSets({
   code: {
-    maxHeight: 500,
-    overflowY: "auto",
     fontFamily: "monospace",
     fontSize: 13,
     lineHeight: "1.5"
@@ -60,20 +58,20 @@ const classNames = mergeStyleSets({
 });
 
 interface IAppState {
-  code: string;
-  JScode: string;
-  error?: string;
-  options: IDropdownOption[];
-  fontSize?: string;
-  editorHidden?: boolean;
+  code: string,
+  JScode: string,
+  error?: string,
+  options: IDropdownOption[],
+  fontSize?: string,
+  editorHidden?: boolean,
 }
 
 export class App extends React.Component {
   public state: IAppState = {
-    code: "",
-    JScode: "",
-    options: options
-  };
+    code: '',
+    JScode: '',
+    options: options,
+  }
 
   private changeFontSize = (
     event: React.FormEvent,
@@ -119,15 +117,15 @@ export class App extends React.Component {
   };
 
   private _eval = () => {
-    try {
+    try{
       eval(this.state.JScode);
       this.setState({
         error: undefined
-      });
-    } catch (ex) {
+      })
+    }catch (ex){
       this.setState({
         error: ex.message
-      });
+      })
     }
   };
 
