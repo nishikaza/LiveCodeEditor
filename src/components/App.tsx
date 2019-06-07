@@ -8,15 +8,7 @@ import {
   mergeStyleSets
 } from "office-ui-fabric-react";
 import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
-// import Editor from "react-simple-code-editor";
-// import Prism from "prismjs";
-// require("prismjs/components/prism-typescript");
-// import "./prism-modified.css";
 initializeIcons();
-
-const CodeMirror = require("react-codemirror");
-require("codemirror/lib/codemirror.css");
-require("codemirror/mode/javascript/javascript");
 
 const babel = require("@babel/standalone");
 
@@ -39,7 +31,11 @@ const babelOptions: babel.TransformOptions = {
   }
 };
 
-const initialCode = `const text: string = "hello world";
+// const JScode = "";
+// const fontSize = 18;
+// const editorHidden = true;
+// const error = undefined;
+const TScode = `const text: string = "hello world";
 ReactDOM.render(<div>{text}</div>, document.getElementById('output'));`;
 
 const classNames = mergeStyleSets({
@@ -92,12 +88,14 @@ export class App extends React.Component {
   };
 
   public componentDidMount() {
-    this.updateCode(initialCode);
+    console.log("mount");
+    this.updateCode(TScode);
   }
 
   public componentDidUpdate(prevProps: {}, prevState: IAppState) {
-    if (prevState.code !== this.state.code) {
-      this._eval();
+    console.log("update");
+    if (prevState.code != this.state.code) {
+      this.evaluateCode();
     }
   }
 
@@ -119,13 +117,9 @@ export class App extends React.Component {
   private _eval = () => {
     try{
       eval(this.state.JScode);
-      this.setState({
-        error: undefined
-      })
-    }catch (ex){
-      this.setState({
-        error: ex.message
-      })
+      this.setState({error: undefined});
+    } catch (ex) {
+      this.setState({error: ex.message})
     }
   };
 
@@ -145,16 +139,10 @@ export class App extends React.Component {
         </Stack.Item>
       </Stack>
     );
+        let TSeditor = (
 
-    let TSeditor = (
       <div>
         <Label>Typescript + React editor</Label>
-        <CodeMirror
-          value={initialCode}
-          onChange={this.updateCode}
-          options={{ lineNumbers: true, maxHeight: 300, width: 500 }}
-          mode="javascript"
-        />
       </div>
     );
 
@@ -179,5 +167,7 @@ export class App extends React.Component {
         {!this.state.editorHidden && editor}
       </div>
     );
+
+
   }
 }
