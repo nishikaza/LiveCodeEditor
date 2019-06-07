@@ -27,13 +27,7 @@ module.exports = webpackMerge(webpackServeConfig, htmlOverlay, {
         languages: ['typescript']
       }),
       new BundleAnalyzerPlugin()
-    ]
-  },
-  node: {
-    fs: "empty",
-    module: "empty",
-    net: "empty"
-  },
+    ],
   externals: [
     {
       react: "React"
@@ -42,5 +36,4 @@ module.exports = webpackMerge(webpackServeConfig, htmlOverlay, {
       "react-dom": "ReactDOM"
     }
   ],
-  plugins: [new BundleAnalyzerPlugin()]
 });

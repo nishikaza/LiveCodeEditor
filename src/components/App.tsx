@@ -95,7 +95,7 @@ export class App extends React.Component {
   public componentDidUpdate(prevProps: {}, prevState: IAppState) {
     console.log("update");
     if (prevState.code != this.state.code) {
-      this.evaluateCode();
+      this._eval();
     }
   }
 
