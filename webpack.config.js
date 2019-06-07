@@ -1,6 +1,4 @@
 const { webpackConfig, webpackMerge } = require("just-scripts");
-const path = require('path');
-const APP_DIR = path.resolve(__dirname, './src');
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -20,10 +18,10 @@ const config = {
   },
   externals: [
     {
-      react: 'React'
+      react: "React"
     },
     {
-      'react-dom': 'ReactDOM'
+      "react-dom": "ReactDOM"
     }
   ],
   plugins: [

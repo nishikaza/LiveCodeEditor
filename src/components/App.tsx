@@ -8,7 +8,6 @@ import {
   mergeStyleSets
 } from "office-ui-fabric-react";
 import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
-
 initializeIcons();
 
 const babel = require("@babel/standalone");
@@ -24,9 +23,9 @@ const options: IDropdownOption[] = [
 ];
 
 const babelOptions: babel.TransformOptions = {
-  filename: 'fake.tsx',
-  presets: ['typescript', 'react', 'es2015'],
-  plugins: ['proposal-class-properties', 'proposal-object-rest-spread'],
+  filename: "fake.tsx",
+  presets: ["typescript", "react", "es2015"],
+  plugins: ["proposal-class-properties", "proposal-object-rest-spread"],
   parserOpts: {
     strictMode: true
   }
@@ -41,14 +40,12 @@ ReactDOM.render(<div>{text}</div>, document.getElementById('output'));`;
 
 const classNames = mergeStyleSets({
   code: {
-    maxHeight: 500,
-    overflowY: "auto",
     fontFamily: "monospace",
     fontSize: 13,
     lineHeight: "1.5"
   },
-  renderSection:{
-    backgroundColor: 'red'
+  renderSection: {
+    backgroundColor: "red"
   },
   error: {
     backgroundColor: "#FEF0F0",
@@ -58,21 +55,18 @@ const classNames = mergeStyleSets({
 
 interface IAppState {
   code: string,
-  error?: string,
-  TScode: string,
   JScode: string,
+  error?: string,
   options: IDropdownOption[],
   fontSize?: string,
-  editorHidden?: boolean
+  editorHidden?: boolean,
 }
 
 export class App extends React.Component {
-
   public state: IAppState = {
     code: '',
-    TScode: '',
     JScode: '',
-    options: options
+    options: options,
   }
 
   private changeFontSize = (
@@ -107,15 +101,14 @@ export class App extends React.Component {
 
   private updateCode = (code: string) => {
     try {
-      console.log("updating...");
       this.setState({
-        TScode: code,
+        code: code,
         JScode: babel.transform(code, babelOptions)!.code!,
         error: undefined
       });
     } catch (ex) {
       this.setState({
-        TScode: code,
+        code: code,
         error: ex.message
       });
     }
@@ -123,21 +116,12 @@ export class App extends React.Component {
 
   private _eval = () => {
     try{
-      return eval(this.state.JScode)
-    }catch (ex){
-      console.log(ex.message)
-    }
-  }
-
-  private evaluateCode() {
-    try {
-      console.log("made it to eval");
       eval(this.state.JScode);
       this.setState({error: undefined});
     } catch (ex) {
       this.setState({error: ex.message})
     }
-  }
+  };
 
   render() {
     let dropdown = (
@@ -165,15 +149,9 @@ export class App extends React.Component {
     let editor = (
       <Stack style={{ backgroundColor: "lightgray" }} gap={4}>
         <Stack.Item>{dropdown}</Stack.Item>
+        <Stack.Item>{TSeditor}</Stack.Item>
         <Stack.Item>
-          <Stack horizontal gap={40} padding={10}>
-            <Stack.Item>{TSeditor}</Stack.Item>
-            <Stack.Item>
-              <pre className={classNames.renderSection}>
-                {this.state.error !== undefined && this._eval}
-              </pre>
-            </Stack.Item>
-          </Stack>
+          <div id="output" />
         </Stack.Item>
         <Stack.Item>
           {this.state.error !== undefined && (
@@ -187,9 +165,7 @@ export class App extends React.Component {
       <div>
         <PrimaryButton onClick={this.buttonClicked} />
         {!this.state.editorHidden && editor}
-        <div id = "output"/>
       </div>
-
     );
 
 
