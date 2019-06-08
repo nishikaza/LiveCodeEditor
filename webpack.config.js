@@ -31,7 +31,7 @@ const config = {
       // available options are documented at https://github.com/Microsoft/monaco-editor-webpack-plugin#options
       languages: ['typescript', 'javascript']
     }),
-    new BundleAnalyzerPlugin()
+    new BundleAnalyzerPlugin(),
   ]
 };
 

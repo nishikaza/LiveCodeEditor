@@ -26,7 +26,7 @@ module.exports = webpackMerge(webpackServeConfig, htmlOverlay, {
         // available options are documented at https://github.com/Microsoft/monaco-editor-webpack-plugin#options
         languages: ['typescript', 'javascript', 'html']
       }),
-      new BundleAnalyzerPlugin()
+      new BundleAnalyzerPlugin(),
     ],
   externals: [
     {
