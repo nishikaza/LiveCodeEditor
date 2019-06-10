@@ -10,6 +10,7 @@ import {
 import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
 initializeIcons();
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
+import { transpileModule, ModuleKind } from 'typescript';
 
 const babel = require("@babel/standalone");
 
@@ -120,6 +121,7 @@ export class App extends React.Component {
       if (this.state.editor !== undefined){
         if(editorText != this.state.code){
           this.updateCode(editorText);
+          this.updateCodeTS(editorText);
         }
       }
       clearInterval(this.timer!);
@@ -139,12 +141,33 @@ export class App extends React.Component {
   public componentDidMount() {
     this.resetTimer();
     this.createEditor();
-    this.updateCode(initialCode);
+    this.updateCodeTS(initialCode);
   }
 
   public componentDidUpdate(prevProps: {}, prevState: IAppState) {
     if (prevState.code != this.state.code) {
       this._eval();
+    }
+  }
+
+  private updateCodeTS = (code: string) => {
+    try {
+      const compilerOptions = {module: ModuleKind.None};
+      const transpiled = transpileModule(code, {
+        compilerOptions: compilerOptions,
+         moduleName: "myMod"
+      })
+      this.setState({
+        code: code,
+        JScode: transpiled,
+        error: undefined
+      })
+      console.log(transpiled.outputText);
+    } catch (ex) {
+      this.setState({
+        code: code,
+        error: ex.message
+      });
     }
   }
 
