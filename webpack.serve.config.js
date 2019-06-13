@@ -1,12 +1,12 @@
 const {
   webpackMerge,
-  htmlOverlay,
+  // htmlOverlay,
   webpackServeConfig
 } = require("just-scripts");
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
-module.exports = webpackMerge(webpackServeConfig, htmlOverlay, {
+module.exports = webpackMerge(webpackServeConfig, {
   mode: "production",
   module: {
       rules: [
@@ -24,7 +24,8 @@ module.exports = webpackMerge(webpackServeConfig, htmlOverlay, {
     plugins: [
       new MonacoWebpackPlugin({
         // available options are documented at https://github.com/Microsoft/monaco-editor-webpack-plugin#options
-        languages: ['typescript', 'javascript', 'html']
+        languages: ['typescript'],
+        // features: ['coreCommands']
       }),
       new BundleAnalyzerPlugin(),
     ],

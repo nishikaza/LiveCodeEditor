@@ -1,28 +1,31 @@
-// import React from "react";
-// import Editor from 'react-simple-code-editor';
-// import Prism from "prismjs";
+//import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
+import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
+import React from 'react';
 
-// class LiveEditor extends React.Component {
+class Editor extends React.Component {
 
-//     render() {
-//         <Editor
-//           hidden={this.state.editorHidden}
-//           value={this.state.code}
-//           onValueChange={code => this.updateCode(code)}
-//           highlight={code =>
-//             Prism.highlight(code, Prism.languages.typescript, "typescript")
-//           }
-//           style={{
-//             fontFamily: "Consolas",
-//             fontSize: this.state.fontSize,
-//             color: "black",
-//             background: "#F3F2F0",
-//           }}
-//         />
-//     }
-// }
-// const LiveEditor1 = () => (
+  constructor(props) {
+    super(props);
+  }
 
-// )
+  componentDidMount() {
+    this.createEditor();
+  }
 
-// export default LiveEditor;
+  componentDidUpdate() {
+    if (this.props)
+  }
+
+  createEditor(initialValue?: string) {
+    return monaco.editor.create(document.getElementById("editor") as HTMLElement, {
+      value: initialValue,
+      language: "typescript"
+    });
+  }
+
+
+
+
+}
+
+export default Editor;

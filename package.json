@@ -23,14 +23,7 @@
     "webpack": "webpack"
   },
   "dependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.4.4",
-    "@babel/preset-react": "^7.0.0",
-    "@babel/preset-typescript": "^7.3.3",
-    "@babel/standalone": "^7.4.5",
     "@uifabric/fluent-theme": "^0.16.6",
-    "babel-loader": "^8.0.6",
-    "babel-plugin-prismjs": "^1.0.2",
-    "babel-preset-react": "^6.24.1",
     "monaco-editor": "^0.17.0",
     "monaco-editor-webpack-plugin": "^1.7.0",
     "office-ui-fabric-react": "^6.165.0",

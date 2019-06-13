@@ -9,10 +9,15 @@ import {
 } from "office-ui-fabric-react";
 import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
 initializeIcons();
-import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
-import { transpileModule, ModuleKind } from 'typescript';
 
-const babel = require("@babel/standalone");
+//import * as monacoEditor from "./Editor";
+
+//import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import * as typescript from "typescript";
+declare const ts: typeof typescript;
+//const ts = require('monaco-editor/esm/vs/language/typescript/lib/typescriptServices.js');
+
+//import * as worker from '../../editor/editor.worker.js';
 
 const options: IDropdownOption[] = [
   { key: "12", text: "12" },
@@ -24,21 +29,17 @@ const options: IDropdownOption[] = [
   { key: "24", text: "24" }
 ];
 
-const babelOptions: babel.TransformOptions = {
-  filename: "fake.tsx",
-  presets: ["typescript", "react", "es2015"],
-  plugins: ["proposal-class-properties", "proposal-object-rest-spread"],
-  parserOpts: {
-    strictMode: true
-  }
-};
-
 // const JScode = "";
 // const fontSize = 18;
 // const editorHidden = true;
 // const error = undefined;
 const initialCode = `const text: string = "hello world";
 ReactDOM.render(<div>{text}</div>, document.getElementById('output'));`;
+
+
+const monacoEditor1 = React.lazy(() =>
+  import("./Editor")
+);
 
 const classNames = mergeStyleSets({
   code: {
@@ -67,7 +68,7 @@ interface IAppState {
   fontSize?: string;
   editorHidden?: boolean;
   editor: any;
-  currentTime: number
+  currentTime: number;
 }
 
 export class App extends React.Component {
@@ -81,17 +82,17 @@ export class App extends React.Component {
 
   private timer: any;
 
-  private createEditor = () => {
-    this.setState({
-      editor: monaco.editor.create(
-        document.getElementById("editor") as HTMLElement,
-        {
-          value: initialCode,
-          language: "typescript"
-        }
-      )
-    })
-  };
+  // private createEditor = () => {
+  //   this.setState({
+  //     editor: monaco.editor.create(
+  //       document.getElementById("editor") as HTMLElement,
+  //       {
+  //         value: initialCode,
+  //         language: "typescript"
+  //       }
+  //     )
+  //   })
+  // };
 
   private changeFontSize = (
     event: React.FormEvent,
@@ -104,10 +105,28 @@ export class App extends React.Component {
   };
 
   private buttonClicked = (): void => {
-    if (this.state.editorHidden == true) {
-      this.setState({ editorHidden: false });
+    import("./Editor").then(() => {
+      this.setState({
+        editor: monacoEditor.createEditor("")
+      });
+    });
+    if (this.state.editor == undefined) {
+      console.log(this.state.editor);
+      this.setState({
+        editor: monacoEditor.createEditor("")
+      });
+      console.log(this.state.editor);
+    }
+    if (this.state.editorHidden) {
+      this.setState({
+        editorHidden: false,
+        editor: monacoEditor.createEditor("tsdfdsfdsfdsfdsfdsfdsfdsfsdfdsfdsfdsfdsfdsest")
+      });
     } else {
-      this.setState({ editorHidden: true });
+      this.setState({
+         editorHidden: true,
+         editor: undefined
+        });
     }
   };
 
@@ -117,30 +136,31 @@ export class App extends React.Component {
         currentTime: this.state.currentTime + 1
       });
     } else {
-      let editorText = this.state.editor.getValue();
-      if (this.state.editor !== undefined){
-        if(editorText != this.state.code){
-          this.updateCode(editorText);
-          this.updateCodeTS(editorText);
+      if (this.state.editor != undefined) {
+        let editorText = this.state.editor.getValue();
+        if (this.state.editor !== undefined) {
+          if (editorText != this.state.code) {
+            this.updateCodeTS(editorText);
+          }
         }
+        clearInterval(this.timer!);
+        this.resetTimer();
       }
-      clearInterval(this.timer!);
-      this.resetTimer();
     }
   };
 
   private resetTimer = () => {
     this.setState({
       currentTime: 0
-    })
+    });
     this.timer = setInterval(() => {
       this.decrementTimeRemaining();
     }, 1000);
-  }
+  };
 
   public componentDidMount() {
     this.resetTimer();
-    this.createEditor();
+    //this.createEditor();
     this.updateCodeTS(initialCode);
   }
 
@@ -152,32 +172,19 @@ export class App extends React.Component {
 
   private updateCodeTS = (code: string) => {
     try {
-      const compilerOptions = {module: ModuleKind.None};
-      const transpiled = transpileModule(code, {
+      console.log("made it");
+      const compilerOptions = { module: ts.ModuleKind.None };
+      const transpiled = ts.transpileModule(code, {
         compilerOptions: compilerOptions,
-         moduleName: "myMod"
-      })
+        moduleName: "myMod"
+      });
+      console.log("made itasdas");
       this.setState({
         code: code,
         JScode: transpiled,
         error: undefined
-      })
+      });
       console.log(transpiled.outputText);
-    } catch (ex) {
-      this.setState({
-        code: code,
-        error: ex.message
-      });
-    }
-  }
-
-  private updateCode = (code: string) => {
-    try {
-      this.setState({
-        code: code,
-        JScode: babel.transform(code, babelOptions)!.code!,
-        error: undefined
-      });
     } catch (ex) {
       this.setState({
         code: code,
@@ -216,7 +223,7 @@ export class App extends React.Component {
         <div>
           <Label>Typescript + React editor</Label>
         </div>
-        <div className={classNames.editor} id="editor" />
+        <div className={classNames.editor} id="editor" hidden = {this.state.editorHidden}/>
       </div>
     );
 
@@ -238,7 +245,8 @@ export class App extends React.Component {
     return (
       <div>
         <PrimaryButton onClick={this.buttonClicked} />
-        {!this.state.editorHidden && editor}
+        {/* {!this.state.editorHidden && editor} */}
+        {editor}
       </div>
     );
   }
