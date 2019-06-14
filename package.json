@@ -23,16 +23,9 @@
     "webpack": "webpack"
   },
   "dependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.4.4",
-    "@babel/preset-react": "^7.0.0",
-    "@babel/preset-typescript": "^7.3.3",
-    "@babel/standalone": "^7.4.5",
-    "@types/prismjs": "^1.16.0",
     "@uifabric/fluent-theme": "^0.16.6",
-    "babel-loader": "^8.0.6",
-    "babel-plugin-prismjs": "^1.0.2",
-    "babel-preset-react": "^6.24.1",
-    "codemirror": "^5.47.0",
+    "monaco-editor": "^0.17.0",
+    "monaco-editor-webpack-plugin": "^1.7.0",
     "office-ui-fabric-react": "^6.165.0",
     "prismjs": "^1.16.0",
     "react": "~16.8.0",
@@ -47,7 +40,7 @@
     "css-loader": "^2.1.1",
     "just-stack-uifabric": ">=0.9.0",
     "ts-loader": "^6.0.1",
-    "typescript": "^3.4.5",
+    "typescript": "^3.5.1",
     "webpack-bundle-analyzer": "^3.3.2"
   },
   "just": {

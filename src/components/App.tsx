@@ -14,11 +14,9 @@ import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
 // import "./prism-modified.css";
 initializeIcons();
 
-const CodeMirror = require("react-codemirror");
-require("codemirror/lib/codemirror.css");
-require("codemirror/mode/javascript/javascript");
-
-const babel = require("@babel/standalone");
+import * as typescript from "typescript";
+import Editor from './Editor';
+declare const ts: typeof typescript;
 
 const options: IDropdownOption[] = [
   { key: "12", text: "12" },
@@ -30,15 +28,10 @@ const options: IDropdownOption[] = [
   { key: "24", text: "24" }
 ];
 
-const babelOptions: babel.TransformOptions = {
-  filename: "fake.tsx",
-  presets: ["typescript", "react", "es2015"],
-  plugins: ["proposal-class-properties", "proposal-object-rest-spread"],
-  parserOpts: {
-    strictMode: true
-  }
-};
-
+// const JScode = "";
+// const fontSize = 18;
+// const editorHidden = true;
+// const error = undefined;
 const initialCode = `const text: string = "hello world";
 ReactDOM.render(<div>{text}</div>, document.getElementById('output'));`;
 
@@ -54,24 +47,34 @@ const classNames = mergeStyleSets({
   error: {
     backgroundColor: "#FEF0F0",
     color: "#FF5E79"
+  },
+  editor: {
+    width: 800,
+    height: 500
   }
 });
 
 interface IAppState {
-  code: string,
-  JScode: string,
-  error?: string,
-  options: IDropdownOption[],
-  fontSize?: string,
-  editorHidden?: boolean,
+  code: string;
+  JScode: string;
+  error?: string;
+  options: IDropdownOption[];
+  fontSize?: string;
+  editorHidden?: boolean;
+  editor: any;
+  currentTime: number;
 }
 
 export class App extends React.Component {
   public state: IAppState = {
-    code: '',
-    JScode: '',
+    code: "",
+    JScode: "",
     options: options,
-  }
+    editor: undefined,
+    currentTime: 0
+  };
+
+  private timer: any;
 
   private changeFontSize = (
     event: React.FormEvent,
@@ -83,31 +86,86 @@ export class App extends React.Component {
     }
   };
 
-  private buttonClicked = (): void => {
-    if (this.state.editorHidden == true) {
-      this.setState({ editorHidden: false });
+  // private buttonClicked = (): void => {
+  //   import("./Editor").then(() => {
+  //     this.setState({
+  //       editor: monacoEditor.createEditor("")
+  //     });
+  //   });
+  //   if (this.state.editor == undefined) {
+  //     console.log(this.state.editor);
+  //     this.setState({
+  //       editor: monacoEditor.createEditor("")
+  //     });
+  //     console.log(this.state.editor);
+  //   }
+  //   if (this.state.editorHidden) {
+  //     this.setState({
+  //       editorHidden: false,
+  //       editor: monacoEditor.createEditor("tsdfdsfdsfdsfdsfdsfdsfdsfsdfdsfdsfdsfdsfdsest")
+  //     });
+  //   } else {
+  //     this.setState({
+  //        editorHidden: true,
+  //        editor: undefined
+  //       });
+  //   }
+  // };
+
+  decrementTimeRemaining = () => {
+    if (this.state.currentTime < 1) {
+      this.setState({
+        currentTime: this.state.currentTime + 1
+      });
     } else {
-      this.setState({ editorHidden: true });
+      if (this.state.editor != undefined) {
+        let editorText = this.state.editor.getValue();
+        if (this.state.editor !== undefined) {
+          if (editorText != this.state.code) {
+            this.updateCodeTS(editorText);
+          }
+        }
+        clearInterval(this.timer!);
+        this.resetTimer();
+      }
     }
   };
 
+  private resetTimer = () => {
+    this.setState({
+      currentTime: 0
+    });
+    this.timer = setInterval(() => {
+      this.decrementTimeRemaining();
+    }, 1000);
+  };
+
   public componentDidMount() {
-    this.updateCode(initialCode);
+    this.resetTimer();
+    //this.createEditor();
+    this.updateCodeTS(initialCode);
   }
 
   public componentDidUpdate(prevProps: {}, prevState: IAppState) {
-    if (prevState.code !== this.state.code) {
+    if (prevState.code != this.state.code) {
       this._eval();
     }
   }
 
-  private updateCode = (code: string) => {
+  private updateCodeTS = (code: string) => {
     try {
+      console.log("made i342t");
+      const compilerOptions = { module: ts.ModuleKind.None };
+      const transpiled = ts.transpileModule(code, {
+        compilerOptions: compilerOptions,
+        moduleName: "myMod"
+      });
       this.setState({
         code: code,
-        JScode: babel.transform(code, babelOptions)!.code!,
+        JScode: transpiled,
         error: undefined
       });
+      console.log(transpiled.outputText);
     } catch (ex) {
       this.setState({
         code: code,
@@ -117,15 +175,11 @@ export class App extends React.Component {
   };
 
   private _eval = () => {
-    try{
+    try {
       eval(this.state.JScode);
-      this.setState({
-        error: undefined
-      })
-    }catch (ex){
-      this.setState({
-        error: ex.message
-      })
+      this.setState({ error: undefined });
+    } catch (ex) {
+      this.setState({ error: ex.message });
     }
   };
 
@@ -145,15 +199,19 @@ export class App extends React.Component {
         </Stack.Item>
       </Stack>
     );
-
+    
     let TSeditor = (
       <div>
-        <Label>Typescript + React editor</Label>
-        <CodeMirror
-          value={initialCode}
-          onChange={this.updateCode}
-          options={{ lineNumbers: true, maxHeight: 300, width: 500 }}
-          mode="javascript"
+        <div>
+          <Label>Typescript + React editor</Label>
+        </div>
+        {/* <div className={classNames.editor} id="editor" hidden = {this.state.editorHidden}/> */}
+        <Editor
+          width = {800}
+          height = {500}
+          value = ""
+          language = "typescript"
+          children = ""
         />
       </div>
     );
@@ -175,8 +233,9 @@ export class App extends React.Component {
 
     return (
       <div>
-        <PrimaryButton onClick={this.buttonClicked} />
-        {!this.state.editorHidden && editor}
+        {/* <PrimaryButton onClick={this.buttonClicked} /> */}
+        {/* {!this.state.editorHidden && editor} */}
+        {editor}
       </div>
     );
   }

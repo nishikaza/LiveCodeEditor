@@ -1,25 +1,34 @@
 const {
   webpackMerge,
-  htmlOverlay,
+  // htmlOverlay,
   webpackServeConfig
 } = require("just-scripts");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
   .BundleAnalyzerPlugin;
 
-module.exports = webpackMerge(webpackServeConfig, htmlOverlay, {
+module.exports = webpackMerge(webpackServeConfig, {
+  mode: "production",
   module: {
-    rules: [
-      {
-        test: /\.css$/,
-        use: ["style-loader", "css-loader"]
-      }
-    ]
-  },
-  node: {
-    fs: "empty",
-    module: "empty",
-    net: "empty"
-  },
+      rules: [
+        {
+          test: /\.css$/,
+          use: ["style-loader", "css-loader"]
+        }
+      ],
+    },
+      node: {
+      fs: 'empty',
+      module: 'empty',
+      net: 'empty'
+    },
+    plugins: [
+      new MonacoWebpackPlugin({
+        // available options are documented at https://github.com/Microsoft/monaco-editor-webpack-plugin#options
+        languages: ['typescript'],
+        // features: ['coreCommands']
+      }),
+      new BundleAnalyzerPlugin(),
+    ],
   externals: [
     {
       react: "React"
@@ -28,5 +37,4 @@ module.exports = webpackMerge(webpackServeConfig, htmlOverlay, {
       "react-dom": "ReactDOM"
     }
   ],
-  plugins: [new BundleAnalyzerPlugin()]
 });
