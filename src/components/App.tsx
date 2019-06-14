@@ -8,6 +8,10 @@ import {
   mergeStyleSets
 } from "office-ui-fabric-react";
 import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
+// import Editor from "react-simple-code-editor";
+// import Prism from "prismjs";
+// require("prismjs/components/prism-typescript");
+// import "./prism-modified.css";
 initializeIcons();
 
 import * as typescript from "typescript";
@@ -195,6 +199,7 @@ export class App extends React.Component {
         </Stack.Item>
       </Stack>
     );
+    
     let TSeditor = (
       <div>
         <div>

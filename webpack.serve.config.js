@@ -3,8 +3,8 @@ const {
   // htmlOverlay,
   webpackServeConfig
 } = require("just-scripts");
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
+  .BundleAnalyzerPlugin;
 
 module.exports = webpackMerge(webpackServeConfig, {
   mode: "production",

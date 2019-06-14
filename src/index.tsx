@@ -16,11 +16,9 @@ mergeStyles({
   }
 });
 
-
 ReactDOM.render(
   <Customizer {...FluentCustomizations}>
     <App />
   </Customizer>,
   document.getElementById('app')
 );
-
