@@ -10,14 +10,9 @@ import {
 import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
 initializeIcons();
 
-//import * as monacoEditor from "./Editor";
-
-//import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import * as typescript from "typescript";
+import Editor from './Editor';
 declare const ts: typeof typescript;
-//const ts = require('monaco-editor/esm/vs/language/typescript/lib/typescriptServices.js');
-
-//import * as worker from '../../editor/editor.worker.js';
 
 const options: IDropdownOption[] = [
   { key: "12", text: "12" },
@@ -35,11 +30,6 @@ const options: IDropdownOption[] = [
 // const error = undefined;
 const initialCode = `const text: string = "hello world";
 ReactDOM.render(<div>{text}</div>, document.getElementById('output'));`;
-
-
-const monacoEditor1 = React.lazy(() =>
-  import("./Editor")
-);
 
 const classNames = mergeStyleSets({
   code: {
@@ -82,18 +72,6 @@ export class App extends React.Component {
 
   private timer: any;
 
-  // private createEditor = () => {
-  //   this.setState({
-  //     editor: monaco.editor.create(
-  //       document.getElementById("editor") as HTMLElement,
-  //       {
-  //         value: initialCode,
-  //         language: "typescript"
-  //       }
-  //     )
-  //   })
-  // };
-
   private changeFontSize = (
     event: React.FormEvent,
     option: IDropdownOption | undefined,
@@ -104,31 +82,31 @@ export class App extends React.Component {
     }
   };
 
-  private buttonClicked = (): void => {
-    import("./Editor").then(() => {
-      this.setState({
-        editor: monacoEditor.createEditor("")
-      });
-    });
-    if (this.state.editor == undefined) {
-      console.log(this.state.editor);
-      this.setState({
-        editor: monacoEditor.createEditor("")
-      });
-      console.log(this.state.editor);
-    }
-    if (this.state.editorHidden) {
-      this.setState({
-        editorHidden: false,
-        editor: monacoEditor.createEditor("tsdfdsfdsfdsfdsfdsfdsfdsfsdfdsfdsfdsfdsfdsest")
-      });
-    } else {
-      this.setState({
-         editorHidden: true,
-         editor: undefined
-        });
-    }
-  };
+  // private buttonClicked = (): void => {
+  //   import("./Editor").then(() => {
+  //     this.setState({
+  //       editor: monacoEditor.createEditor("")
+  //     });
+  //   });
+  //   if (this.state.editor == undefined) {
+  //     console.log(this.state.editor);
+  //     this.setState({
+  //       editor: monacoEditor.createEditor("")
+  //     });
+  //     console.log(this.state.editor);
+  //   }
+  //   if (this.state.editorHidden) {
+  //     this.setState({
+  //       editorHidden: false,
+  //       editor: monacoEditor.createEditor("tsdfdsfdsfdsfdsfdsfdsfdsfsdfdsfdsfdsfdsfdsest")
+  //     });
+  //   } else {
+  //     this.setState({
+  //        editorHidden: true,
+  //        editor: undefined
+  //       });
+  //   }
+  // };
 
   decrementTimeRemaining = () => {
     if (this.state.currentTime < 1) {
@@ -172,13 +150,12 @@ export class App extends React.Component {
 
   private updateCodeTS = (code: string) => {
     try {
-      console.log("made it");
+      console.log("made i342t");
       const compilerOptions = { module: ts.ModuleKind.None };
       const transpiled = ts.transpileModule(code, {
         compilerOptions: compilerOptions,
         moduleName: "myMod"
       });
-      console.log("made itasdas");
       this.setState({
         code: code,
         JScode: transpiled,
@@ -223,7 +200,14 @@ export class App extends React.Component {
         <div>
           <Label>Typescript + React editor</Label>
         </div>
-        <div className={classNames.editor} id="editor" hidden = {this.state.editorHidden}/>
+        {/* <div className={classNames.editor} id="editor" hidden = {this.state.editorHidden}/> */}
+        <Editor
+          width = {800}
+          height = {500}
+          value = ""
+          language = "typescript"
+          children = ""
+        />
       </div>
     );
 
@@ -244,7 +228,7 @@ export class App extends React.Component {
 
     return (
       <div>
-        <PrimaryButton onClick={this.buttonClicked} />
+        {/* <PrimaryButton onClick={this.buttonClicked} /> */}
         {/* {!this.state.editorHidden && editor} */}
         {editor}
       </div>
