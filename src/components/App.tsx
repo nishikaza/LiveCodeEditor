@@ -1,37 +1,17 @@
 import React from "react";
 import {
-  Dropdown,
-  IDropdownOption,
   PrimaryButton,
   Stack,
   Label,
   mergeStyleSets
 } from "office-ui-fabric-react";
 import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
-// import Editor from "react-simple-code-editor";
-// import Prism from "prismjs";
-// require("prismjs/components/prism-typescript");
-// import "./prism-modified.css";
 initializeIcons();
 
 import * as typescript from "typescript";
 import Editor from './Editor';
 declare const ts: typeof typescript;
 
-const options: IDropdownOption[] = [
-  { key: "12", text: "12" },
-  { key: "14", text: "14" },
-  { key: "16", text: "16" },
-  { key: "18", text: "18" },
-  { key: "20", text: "20" },
-  { key: "22", text: "22" },
-  { key: "24", text: "24" }
-];
-
-// const JScode = "";
-// const fontSize = 18;
-// const editorHidden = true;
-// const error = undefined;
 const initialCode = `const text: string = "hello world";
 ReactDOM.render(<div>{text}</div>, document.getElementById('output'));`;
 
@@ -58,8 +38,6 @@ interface IAppState {
   code: string;
   JScode: string;
   error?: string;
-  options: IDropdownOption[];
-  fontSize?: string;
   editorHidden?: boolean;
   editor: any;
   currentTime: number;
@@ -69,22 +47,11 @@ export class App extends React.Component {
   public state: IAppState = {
     code: "",
     JScode: "",
-    options: options,
     editor: undefined,
     currentTime: 0
   };
 
   private timer: any;
-
-  private changeFontSize = (
-    event: React.FormEvent,
-    option: IDropdownOption | undefined,
-    index: number | undefined
-  ): void => {
-    if (typeof index != "undefined") {
-      this.setState({ fontSize: parseInt(options[index].key as string) });
-    }
-  };
 
   // private buttonClicked = (): void => {
   //   import("./Editor").then(() => {
@@ -184,22 +151,6 @@ export class App extends React.Component {
   };
 
   render() {
-    let dropdown = (
-      <Stack horizontal padding={10} gap={10}>
-        <Stack.Item>
-          <Label>Select code font size:</Label>
-        </Stack.Item>
-        <Stack.Item>
-          <Dropdown
-            options={this.state.options}
-            defaultSelectedKey="18"
-            onChange={this.changeFontSize}
-            styles={{ dropdown: { width: 100 } }}
-          />
-        </Stack.Item>
-      </Stack>
-    );
-    
     let TSeditor = (
       <div>
         <div>
@@ -218,7 +169,6 @@ export class App extends React.Component {
 
     let editor = (
       <Stack style={{ backgroundColor: "lightgray" }} gap={4}>
-        <Stack.Item>{dropdown}</Stack.Item>
         <Stack.Item>{TSeditor}</Stack.Item>
         <Stack.Item>
           <div id="output" />

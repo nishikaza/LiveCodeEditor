@@ -7,7 +7,6 @@ const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
   .BundleAnalyzerPlugin;
 
 module.exports = webpackMerge(webpackServeConfig, {
-  mode: "production",
   module: {
       rules: [
         {

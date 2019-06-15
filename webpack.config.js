@@ -2,7 +2,6 @@ const { webpackConfig, webpackMerge } = require("just-scripts");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
   .BundleAnalyzerPlugin;
 
-const path = require('path');
 
 const config = {
   module: {
