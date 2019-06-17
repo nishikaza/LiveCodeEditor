@@ -1,24 +1,16 @@
 //import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
-import React from 'react';
-
-interface IEditorProps {
-  width: number,
-  height: number,
-  value: string,
-  language: string
-}
+import React from "react";
+import { IEditorProps } from "./Editor.types";
 
 class Editor extends React.Component<IEditorProps> {
-
   private editor: monaco.editor.IStandaloneCodeEditor | undefined;
   private codeValue: string;
 
   constructor(props: any) {
     super(props);
     this.editor = undefined;
-    this.codeValue = this.props.value;
-
+    this.codeValue = this.props.code;
   }
 
   componentDidMount() {
@@ -30,8 +22,8 @@ class Editor extends React.Component<IEditorProps> {
   }
 
   componentDidUpdate() {
-    if (this.props.value != this.codeValue) {
-      this.codeValue = this.props.value;
+    if (this.props.code != this.codeValue) {
+      this.codeValue = this.props.code;
       if (this.editor) {
         this.editor.setValue(this.codeValue);
       }
@@ -39,10 +31,13 @@ class Editor extends React.Component<IEditorProps> {
   }
 
   createEditor() {
-    this.editor = monaco.editor.create(document.getElementById("editor") as HTMLElement, {
-      value: this.props.value,
-      language: this.props.language
-    });
+    this.editor = monaco.editor.create(
+      document.getElementById("editor") as HTMLElement,
+      {
+        value: this.props.code,
+        language: this.props.language
+      }
+    );
   }
 
   closeEditor() {
@@ -56,14 +51,9 @@ class Editor extends React.Component<IEditorProps> {
     const style = {
       width: width,
       height: height
-    }
-    return (
-      <div style = {style} id = "editor" />
-    )
+    };
+    return <div style={style} id="editor" />;
   }
-
-
-
 }
 
 export default Editor;

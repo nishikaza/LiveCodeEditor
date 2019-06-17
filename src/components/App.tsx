@@ -2,7 +2,7 @@ import React from "react";
 import {
   Dropdown,
   IDropdownOption,
-  PrimaryButton,
+  // PrimaryButton,
   Stack,
   Label,
   mergeStyleSets
@@ -28,10 +28,6 @@ const options: IDropdownOption[] = [
   { key: "24", text: "24" }
 ];
 
-// const JScode = "";
-// const fontSize = 18;
-// const editorHidden = true;
-// const error = undefined;
 const initialCode = `const text: string = "hello world";
 ReactDOM.render(<div>{text}</div>, document.getElementById('output'));`;
 
@@ -199,7 +195,7 @@ export class App extends React.Component {
         </Stack.Item>
       </Stack>
     );
-    
+
     let TSeditor = (
       <div>
         <div>
@@ -209,7 +205,7 @@ export class App extends React.Component {
         <Editor
           width = {800}
           height = {500}
-          value = ""
+          code = ''
           language = "typescript"
           children = ""
         />
@@ -220,9 +216,6 @@ export class App extends React.Component {
       <Stack style={{ backgroundColor: "lightgray" }} gap={4}>
         <Stack.Item>{dropdown}</Stack.Item>
         <Stack.Item>{TSeditor}</Stack.Item>
-        <Stack.Item>
-          <div id="output" />
-        </Stack.Item>
         <Stack.Item>
           {this.state.error !== undefined && (
             <Label className={classNames.error}>`{this.state.error}`</Label>
