@@ -1,20 +1,26 @@
-//import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import React from "react";
 import { IEditorProps } from "./Editor.types";
 
-class Editor extends React.Component<IEditorProps> {
-  private editor: monaco.editor.IStandaloneCodeEditor | undefined;
-  private codeValue: string;
+interface IEditorState {
+  editor: any,
+  codeValue: string
+}
 
+export class Editor extends React.Component<IEditorProps> {
+
+  public state: IEditorState = {
+    editor: undefined,
+    codeValue: ""
+  }
   constructor(props: any) {
     super(props);
-    this.editor = undefined;
-    this.codeValue = this.props.code;
+
   }
 
   componentDidMount() {
     this.createEditor();
+    this.setState({codeVal: this.props.code})
   }
 
   componentWillUnmount() {
@@ -22,27 +28,29 @@ class Editor extends React.Component<IEditorProps> {
   }
 
   componentDidUpdate() {
-    if (this.props.code != this.codeValue) {
-      this.codeValue = this.props.code;
-      if (this.editor) {
-        this.editor.setValue(this.codeValue);
+    if (this.props.code != this.state.codeValue) {
+      this.state.codeValue = this.props.code;
+      if (this.state.editor) {
+        this.state.editor.setValue(this.state.codeValue);
       }
     }
   }
 
   createEditor() {
-    this.editor = monaco.editor.create(
+    this.setState({editor: monaco.editor.create(
       document.getElementById("editor") as HTMLElement,
       {
         value: this.props.code,
         language: this.props.language
       }
-    );
+    )})
+    console.log(this.state.editor)
   }
 
   closeEditor() {
-    if (this.editor) {
-      this.editor.dispose();
+    if (this.state.editor) {
+      this.setState({editor: null});
+      this.state.editor.dispose();
     }
   }
 
@@ -55,5 +63,3 @@ class Editor extends React.Component<IEditorProps> {
     return <div style={style} id="editor" />;
   }
 }
-
-export default Editor;

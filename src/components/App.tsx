@@ -2,7 +2,7 @@ import React from "react";
 import {
   Dropdown,
   IDropdownOption,
-  // PrimaryButton,
+  PrimaryButton,
   Stack,
   Label,
   mergeStyleSets
@@ -15,7 +15,8 @@ import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
 initializeIcons();
 
 import * as typescript from "typescript";
-const Editor = React.lazy(() => import('./Editor'));
+//const Editor = React.lazy(() => import('./Editor'));
+//import {Editor} from ("./Editor");
 declare const ts: typeof typescript;
 
 const options: IDropdownOption[] = [
@@ -67,7 +68,8 @@ export class App extends React.Component {
     JScode: "",
     options: options,
     editor: undefined,
-    currentTime: 0
+    currentTime: 0,
+    editorHidden: true
   };
 
   private timer: any;
@@ -82,40 +84,31 @@ export class App extends React.Component {
     }
   };
 
-  // private buttonClicked = (): void => {
-  //   import("./Editor").then(() => {
-  //     this.render() {
-  //       <Editor
-  //         width = {800}
-  //         height = {500}
-  //         value = ""
-  //         language = "typescript"
-  //         children = ""
-  //       />
-  //   }
-  //     this.setState({
-  //       editor: monacoEditor.createEditor("")
-  //     });
-  //   });
-  //   if (this.state.editor == undefined) {
-  //     console.log(this.state.editor);
-  //     this.setState({
-  //       editor: monacoEditor.createEditor("")
-  //     });
-  //     console.log(this.state.editor);
-  //   }
-  //   if (this.state.editorHidden) {
-  //     this.setState({
-  //       editorHidden: false,
-  //       editor: monacoEditor.createEditor("tsdfdsfdsfdsfdsfdsfdsfdsfsdfdsfdsfdsfdsfdsest")
-  //     });
-  //   } else {
-  //     this.setState({
-  //        editorHidden: true,
-  //        editor: undefined
-  //       });
-  //   }
-  // };
+  private buttonClicked = (): void => {
+    if (this.state.editorHidden) {
+      import("./Editor").then((editor) => {
+        let TSeditor = (
+          <div>
+            <div>
+              <Label>Typescript + React editor</Label>
+            </div>
+            {/* <div className={classNames.editor} id="editor" hidden = {this.state.editorHidden}/> */}
+            <React.Suspense fallback={<div>Loading...</div>}>
+            <editor.Editor
+              width = {800}
+              height = {500}
+              code = ''
+              language = "typescript"
+            />
+            </React.Suspense>
+          </div>
+        )
+        this.setState({editorHidden: false, editor: TSeditor});
+      });
+  } else {
+    this.setState({editor: null, editorHidden: true})
+  }
+}
 
   decrementTimeRemaining = () => {
     if (this.state.currentTime < 1) {
@@ -124,7 +117,7 @@ export class App extends React.Component {
       });
     } else {
       if (this.state.editor != undefined) {
-        let editorText = this.state.editor.getValue();
+        let editorText = this.state.editor.getValue1();
         if (this.state.editor !== undefined) {
           if (editorText != this.state.code) {
             this.updateCodeTS(editorText);
@@ -159,7 +152,6 @@ export class App extends React.Component {
 
   private updateCodeTS = (code: string) => {
     try {
-      console.log("made i342t");
       const compilerOptions = { module: ts.ModuleKind.None };
       const transpiled = ts.transpileModule(code, {
         compilerOptions: compilerOptions,
@@ -211,13 +203,14 @@ export class App extends React.Component {
           <Label>Typescript + React editor</Label>
         </div>
         {/* <div className={classNames.editor} id="editor" hidden = {this.state.editorHidden}/> */}
-        <Editor
+        <React.Suspense fallback={<div>Loading...</div>}>
+        {/* <Editor
           width = {800}
           height = {500}
           code = ''
           language = "typescript"
-          children = ""
-        />
+        /> */}
+        </React.Suspense>
       </div>
     );
 
@@ -235,9 +228,9 @@ export class App extends React.Component {
 
     return (
       <div>
-        {/* <PrimaryButton onClick={this.buttonClicked} /> */}
+        {<PrimaryButton onClick={this.buttonClicked} />}
         {/* {!this.state.editorHidden && editor} */}
-        {editor}
+        {this.state.editor}
       </div>
     );
   }
