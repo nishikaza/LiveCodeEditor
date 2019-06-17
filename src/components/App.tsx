@@ -15,7 +15,7 @@ import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
 initializeIcons();
 
 import * as typescript from "typescript";
-import Editor from './Editor';
+const Editor = React.lazy(() => import('./Editor'));
 declare const ts: typeof typescript;
 
 const options: IDropdownOption[] = [
@@ -88,6 +88,15 @@ export class App extends React.Component {
 
   // private buttonClicked = (): void => {
   //   import("./Editor").then(() => {
+  //     this.render() {
+  //       <Editor
+  //         width = {800}
+  //         height = {500}
+  //         value = ""
+  //         language = "typescript"
+  //         children = ""
+  //       />
+  //   }
   //     this.setState({
   //       editor: monacoEditor.createEditor("")
   //     });
@@ -199,7 +208,7 @@ export class App extends React.Component {
         </Stack.Item>
       </Stack>
     );
-    
+
     let TSeditor = (
       <div>
         <div>
