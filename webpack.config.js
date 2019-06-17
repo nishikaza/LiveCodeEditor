@@ -1,8 +1,8 @@
 const { webpackConfig, webpackMerge } = require("just-scripts");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
   .BundleAnalyzerPlugin;
-
 const path = require('path');
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 const config = {
   module: {
