@@ -13,11 +13,9 @@ import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
 // require("prismjs/components/prism-typescript");
 // import "./prism-modified.css";
 initializeIcons();
-
-import * as typescript from "typescript";
+import { ITranspileOutput } from '../transpiler/transpile.types';
 //const Editor = React.lazy(() => import('./Editor'));
 //import {Editor} from ("./Editor");
-declare const ts: typeof typescript;
 
 const options: IDropdownOption[] = [
   { key: "12", text: "12" },
@@ -72,7 +70,7 @@ export class App extends React.Component {
     editorHidden: true
   };
 
-  private timer: any;
+  // private timer: any;
 
   private changeFontSize = (
     event: React.FormEvent,
@@ -110,37 +108,36 @@ export class App extends React.Component {
   }
 }
 
-  decrementTimeRemaining = () => {
-    if (this.state.currentTime < 1) {
-      this.setState({
-        currentTime: this.state.currentTime + 1
-      });
-    } else {
-      if (this.state.editor != undefined) {
-        let editorText = this.state.editor.getValue1();
-        if (this.state.editor !== undefined) {
-          if (editorText != this.state.code) {
-            this.updateCodeTS(editorText);
-          }
-        }
-        clearInterval(this.timer!);
-        this.resetTimer();
-      }
-    }
-  };
+  // decrementTimeRemaining = () => {
+  //   if (this.state.currentTime < 1) {
+  //     this.setState({
+  //       currentTime: this.state.currentTime + 1
+  //     });
+  //   } else {
+  //     if (this.state.editor != undefined) {
+  //       let editorText = this.state.editor.getValue();
+  //       if (this.state.editor !== undefined) {
+  //         if (editorText != this.state.code) {
+  //           this.updateCodeTS(editorText);
+  //         }
+  //       }
+  //       clearInterval(this.timer!);
+  //       this.resetTimer();
+  //     }
+  //   }
+  // };
 
-  private resetTimer = () => {
-    this.setState({
-      currentTime: 0
-    });
-    this.timer = setInterval(() => {
-      this.decrementTimeRemaining();
-    }, 1000);
-  };
+  // private resetTimer = () => {
+  //   this.setState({
+  //     currentTime: 0
+  //   });
+  //   this.timer = setInterval(() => {
+  //     this.decrementTimeRemaining();
+  //   }, 1000);
+  // };
 
   public componentDidMount() {
-    this.resetTimer();
-    //this.createEditor();
+    // this.resetTimer();
     this.updateCodeTS(initialCode);
   }
 
@@ -151,23 +148,29 @@ export class App extends React.Component {
   }
 
   private updateCodeTS = (code: string) => {
-    try {
-      const compilerOptions = { module: ts.ModuleKind.None };
-      const transpiled = ts.transpileModule(code, {
-        compilerOptions: compilerOptions,
-        moduleName: "myMod"
-      });
-      this.setState({
-        code: code,
-        JScode: transpiled,
-        error: undefined
-      });
-      console.log(transpiled.outputText);
-    } catch (ex) {
-      this.setState({
-        code: code,
-        error: ex.message
-      });
+    let transpiled: ITranspileOutput = {
+      outputString: undefined,
+      error:undefined
+    };
+    import('../transpiler/transpile').then((transpiler) => {
+      transpiled = transpiler.transpile(code)
+    });
+    if(transpiled !== undefined){
+      if(transpiled.outputString){
+        this.setState({
+          code: code,
+          JScode: transpiled.outputString,
+          error: undefined
+        });
+      }
+      else{
+        this.setState({
+          code: code,
+          error: transpiled.error
+        });
+      }
+    }else{
+      console.log('error: unable to load transpiler')
     }
   };
 
@@ -229,7 +232,7 @@ export class App extends React.Component {
     return (
       <div>
         {<PrimaryButton onClick={this.buttonClicked} />}
-        {/* {!this.state.editorHidden && editor} */}
+        {!this.state.editorHidden && editor}
         {this.state.editor}
       </div>
     );
