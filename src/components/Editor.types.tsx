@@ -3,5 +3,5 @@ export interface IEditorProps{
   height: number,
 	initialCode?: string,
 	code: string,
-  language: string
+	language: string
 }

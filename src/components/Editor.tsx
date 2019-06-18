@@ -15,7 +15,6 @@ export class Editor extends React.Component<IEditorProps> {
   }
   constructor(props: any) {
     super(props);
-
   }
 
   componentDidMount() {
