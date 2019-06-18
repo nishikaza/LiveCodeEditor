@@ -27,14 +27,17 @@ export class Editor extends React.Component<IEditorProps> {
     this.closeEditor();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(): string {
     if (this.props.code != this.state.codeValue) {
       this.state.codeValue = this.props.code;
       if (this.state.editor) {
         this.state.editor.setValue(this.state.codeValue);
       }
     }
+    console.log("upd");
+    return this.state.codeValue;
   }
+
 
   createEditor() {
     this.setState({editor: monaco.editor.create(
