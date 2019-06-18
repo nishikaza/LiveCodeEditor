@@ -3,7 +3,7 @@ import React from "react";
 import { IEditorProps } from "./Editor.types";
 
 interface IEditorState {
-  editor: any,
+  editor: monaco.editor.IStandaloneCodeEditor | undefined,
   codeValue: string
 }
 
@@ -43,7 +43,11 @@ export class Editor extends React.Component<IEditorProps> {
         language: this.props.language
       }
     )})
-    console.log(this.state.editor)
+    if(this.state.editor !== undefined){
+      console.log(this.state.editor.getModel)
+    }else{
+      console.log(this.state.editor)
+    }
   }
 
   closeEditor() {
