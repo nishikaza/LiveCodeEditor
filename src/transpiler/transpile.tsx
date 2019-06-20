@@ -15,6 +15,7 @@ export function transpile(code: string): ITranspileOutput {
                 module: ts.ModuleKind.ES2015
             }
         }).outputText;
+        output.outputString = output.outputString.substring(0, output.outputString.length-4)
         return output
     }catch(ex){
         output.error = ex.message;
@@ -43,8 +44,9 @@ export function _evalCode(code: string): IEvalCode {
     };
     try{
         output.outputHTML = eval(code);
+        console.log(eval(code))
     }catch(ex){
-        output.outputHTML = ex.message;
+        output.error = ex.message;
     }
     return output;
 }

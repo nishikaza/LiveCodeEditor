@@ -50,6 +50,7 @@ export class App extends React.Component {
       })
     }
     console.log('on change test', newVal);
+    console.log(rendered.outputHTML)
     console.log(transpile(newVal))
   };
 
