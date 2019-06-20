@@ -1,4 +1,8 @@
 export interface ITranspileOutput{
-    outputString: string | undefined,
-    error: string | undefined
+    outputString?: string,
+    error?: string
+}
+export interface IEvalCode{
+    outputHTML?: any,
+    error?: string;
 }
