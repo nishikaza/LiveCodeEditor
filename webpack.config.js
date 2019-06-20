@@ -12,11 +12,6 @@ const config = {
       }
     ]
   },
-  node: {
-    fs: "empty",
-    module: "empty",
-    net: "empty"
-  },
   externals: [
     {
       react: "React"

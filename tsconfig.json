@@ -15,7 +15,8 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "jsx": "react",
-    "allowJs": true
+    "allowJs": true,
+    // "types": ["jest", "webpack-env"]
   },
   "include": ["src/index.tsx", "typings/**/*.d.ts"]
 }

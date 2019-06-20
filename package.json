@@ -32,7 +32,9 @@
     "react": "~16.8.0",
     "react-codemirror": "^1.0.0",
     "react-dom": "~16.8.0",
-    "react-simple-code-editor": "^0.9.10"
+    "react-monaco-editor": "^0.26.2",
+    "react-simple-code-editor": "^0.9.10",
+    "webpack-env": "^0.8.0"
   },
   "devDependencies": {
     "@types/jest": "^24.0.0",
