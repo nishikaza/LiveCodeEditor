@@ -30,27 +30,21 @@ export function transpile(code: string): ITranspileOutput {
 //const text: string = "hello world";
 // ReactDOM.render(<div>{text}</div>, document.getElementById('output'));
 
-export function setCompilerOptions(){
-    const configuration: monaco.languages.LanguageConfiguration = {
-
-    }
-    monaco.languages.setLanguageConfiguration('typescript', configuration);
-}
-
-export function transpileTSW(code: string, model: any) {
+export function transpileTSW(code: string, model: any): ITranspileOutput {
+    let transpiledOutput: ITranspileOutput ={
+        outputString: undefined,
+        error: undefined
+    };
     try{
-        // console.log('dsf')
         monaco.languages.typescript.getTypeScriptWorker()
             .then(_worker=>{_worker(model)
                 .then((worker: TypeScriptWorker)=>{
-                    // console.log(worker.getEmitOutput());
-                    worker.getEmitOutput(model.toString()).then((output: ts.EmitOutput) => console.log(output.outputFiles[0].text))
-                    // debugger
-                    // console.log(worker.getScriptFileNames())
+                    worker.getEmitOutput(model.toString()).then((output: ts.EmitOutput) =>{ transpiledOutput.outputString =  output.outputFiles[0].text});
             })})
     }catch(ex){
-        console.log(ex)
+        transpiledOutput.error = ex.message;
     }
+    return transpiledOutput;
 }
 
 export function _evalCode(code: string): IEvalCode {
