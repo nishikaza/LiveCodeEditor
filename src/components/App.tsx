@@ -1,7 +1,7 @@
 import React from 'react';
 import { PrimaryButton, Stack, Label, mergeStyleSets } from 'office-ui-fabric-react';
 // import { ITranspileOutput } from '../transpiler/transpile.types';
-import { transpile, _evalCode } from '../transpiler/transpile';
+import { transpile, _evalCode, transpileTSW } from '../transpiler/transpile';
 
 const classNames = mergeStyleSets({
   code: {
@@ -42,16 +42,31 @@ export class App extends React.Component {
     editorHidden: true
   };
 
+  public componentDidmount(){
+    const reactInit = `{
+      react: "React"
+    },`;
+    try{
+      eval(reactInit);
+    }catch(ex){
+      console.log(ex.message)
+    }
+  }
+
   private onChange = (newVal: string, editor: any) => {
     const rendered = _evalCode(transpile(newVal)!.outputString!);
+    transpileTSW(newVal, editor)
     if(rendered.outputHTML){
       this.setState({
-        renderedCode: rendered.outputHTML
-      })
+        renderedCode: rendered.outputHTML,
+        error: undefined
+      });
+    }else{
+      this.setState({
+        renderedCode: undefined,
+        error: rendered.error
+      });
     }
-    console.log('on change test', newVal);
-    console.log(rendered.outputHTML)
-    console.log(transpile(newVal))
   };
 
   private buttonClicked = (): void => {
@@ -82,7 +97,6 @@ export class App extends React.Component {
       <Stack style={{ backgroundColor: 'lightgray' }} gap={4}>
         {!this.state.editorHidden && this.state.editor}
         {this.state.error !== undefined && <Label className={classNames.error}>`{this.state.error}`</Label>}
-        {this.state.renderedCode ? this.state.renderedCode : ''}
       </Stack>
     );
 
@@ -90,7 +104,9 @@ export class App extends React.Component {
       <div>
         <PrimaryButton onClick={this.buttonClicked} />
         {!this.state.editorHidden && editor}
+        <div id='output'></div>
       </div>
     );
   }
 }
+

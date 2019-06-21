@@ -32,7 +32,7 @@ export class Editor extends React.Component<IEditorProps> {
     });
 
     this.editor.onDidChangeModelContent(event => {
-      this.props.onChange(this.editor!.getValue(), this.editor);
+      this.props.onChange(this.editor!.getValue(), this.editor.getModel().uri);
     });
   }
 
