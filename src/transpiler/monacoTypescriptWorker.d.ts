@@ -46,3 +46,13 @@ export interface ICreateData {
     extraLibs: IExtraLibs;
 }
 export declare function create(ctx: IWorkerContext, createData: ICreateData): TypeScriptWorker;
+
+export interface EmitOutput {
+    outputFiles: OutputFile[];
+    emitSkipped: boolean;
+}
+interface OutputFile {
+    name: string;
+    writeByteOrderMark: boolean;
+    text: string;
+}

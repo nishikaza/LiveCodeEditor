@@ -1,7 +1,7 @@
 import React from 'react';
 import { PrimaryButton, Stack, Label, mergeStyleSets } from 'office-ui-fabric-react';
-// import { ITranspileOutput } from '../transpiler/transpile.types';
-import { transpile, _evalCode, transpileTSW } from '../transpiler/transpile';
+import { transpileTSW, _evalCode } from '../transpiler/transpile';
+import { IEvalCode, ITranspileOutput } from '../transpiler/transpile.types'
 
 const classNames = mergeStyleSets({
   code: {
@@ -42,20 +42,10 @@ export class App extends React.Component {
     editorHidden: true
   };
 
-  public componentDidmount(){
-    const reactInit = `{
-      react: "React"
-    },`;
-    try{
-      eval(reactInit);
-    }catch(ex){
-      console.log(ex.message)
-    }
-  }
-
   private onChange = (newVal: string, editor: any) => {
-    const rendered = _evalCode(transpile(newVal)!.outputString!);
-    transpileTSW(newVal, editor)
+    console.log( transpileTSW(editor).outputString)
+    const transpiledCode: ITranspileOutput = transpileTSW(editor)
+    const rendered: IEvalCode = transpiledCode.outputString ? _evalCode(transpiledCode.outputString) : { error: transpiledCode.error };
     if(rendered.outputHTML){
       this.setState({
         renderedCode: rendered.outputHTML,
@@ -67,6 +57,7 @@ export class App extends React.Component {
         error: rendered.error
       });
     }
+    console.log(transpiledCode)
   };
 
   private buttonClicked = (): void => {
