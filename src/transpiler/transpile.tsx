@@ -1,34 +1,34 @@
-import { ITranspileOutput, IEvalCode } from './transpile.types';
 import * as monaco from 'monaco-editor';
+import { ITranspiledOutput, IEvalCode } from './transpile.types';
 import { TypeScriptWorker, EmitOutput } from './monacoTypescriptWorker';
 
-export function transpileTSW(model: any): ITranspileOutput {
-    let transpiledOutput: ITranspileOutput ={
-        outputString: undefined,
-        error: undefined
-    };
-    try{
-        monaco.languages.typescript.getTypeScriptWorker()
-            .then(_worker=>{_worker(model)
-                .then((worker: TypeScriptWorker)=>{ worker.getEmitOutput(model.toString())
-                    .then((output: EmitOutput) =>{
+export function transpileTSW(model: any): Promise<ITranspiledOutput> {
+    const ret = new Promise<ITranspiledOutput>((resolve) => {
+    monaco.languages.typescript.getTypeScriptWorker()
+        .then(_worker=>{_worker(model)
+            .then((worker: TypeScriptWorker)=>{ worker.getEmitOutput(model.toString())
+                .then((output: EmitOutput) =>{
+                    let transpiledOutput: ITranspiledOutput = { error: undefined, outputString: undefined};
+                    if(output.outputFiles[0]){
                         transpiledOutput.outputString = output.outputFiles[0].text;
-                    });
+                    }else{
+                        transpiledOutput.error = 'Could not transpile code';
+                    }
+                    resolve(transpiledOutput);
                 });
             });
-    }catch(ex){
-        transpiledOutput.error = ex.message;
-    }
-    return transpiledOutput;
+        });
+    });
+    return ret;
 }
 
 export function _evalCode(code: string): IEvalCode {
     let output: IEvalCode = {
-        outputHTML: undefined,
+        eval: undefined,
         error: undefined
     };
     try{
-        output.outputHTML = eval(code);
+        output.eval = eval(code);
     }catch(ex){
         output.error = ex.message;
     }

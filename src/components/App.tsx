@@ -1,63 +1,50 @@
 import React from 'react';
 import { PrimaryButton, Stack, Label, mergeStyleSets } from 'office-ui-fabric-react';
 import { transpileTSW, _evalCode } from '../transpiler/transpile';
-import { IEvalCode, ITranspileOutput } from '../transpiler/transpile.types'
+import { ITranspiledOutput } from '../transpiler/transpile.types'
 
 const classNames = mergeStyleSets({
-  code: {
-    fontFamily: 'monospace',
-    fontSize: 13,
-    lineHeight: '1.5'
-  },
-  renderSection: {
-    backgroundColor: 'red'
-  },
   error: {
     backgroundColor: '#FEF0F0',
     color: '#FF5E79'
   },
-  editor: {
-    width: 800,
-    height: 500
+  component: {
+    backgroundColor: 'lightgray'
   }
 });
 
 interface IAppState {
-  code: string;
-  JScode: string;
   error?: string;
-  fontSize?: string;
   editorHidden?: boolean;
-  editor?: JSX.Element;
-  currentTime: number;
+  editor?: any;
   renderedCode?: any;
 }
 
 export class App extends React.Component {
   public state: IAppState = {
-    code: '',
-    JScode: '',
-    editor: undefined,
-    currentTime: 0,
     editorHidden: true
   };
 
-  private onChange = (newVal: string, editor: any) => {
-    console.log( transpileTSW(editor).outputString)
-    const transpiledCode: ITranspileOutput = transpileTSW(editor)
-    const rendered: IEvalCode = transpiledCode.outputString ? _evalCode(transpiledCode.outputString) : { error: transpiledCode.error };
-    if(rendered.outputHTML){
-      this.setState({
-        renderedCode: rendered.outputHTML,
-        error: undefined
-      });
-    }else{
-      this.setState({
-        renderedCode: undefined,
-        error: rendered.error
-      });
-    }
-    console.log(transpiledCode)
+  private onChange = (editor: any) => {
+    transpileTSW(editor).then((output: ITranspiledOutput) => {
+      if(output.outputString){
+        const evaledCode = _evalCode(output.outputString);
+        console.log(evaledCode)
+        if(evaledCode.error){
+          this.setState({
+            error: evaledCode.error
+          });
+        }else{
+          this.setState({
+            error: undefined
+          })
+        }
+      }else {
+        this.setState({
+          error: output.error
+        });
+      }
+    });
   };
 
   private buttonClicked = (): void => {
@@ -85,7 +72,7 @@ export class App extends React.Component {
 
   public render() {
     const editor = (
-      <Stack style={{ backgroundColor: 'lightgray' }} gap={4}>
+      <Stack className={classNames.component} gap={4}>
         {!this.state.editorHidden && this.state.editor}
         {this.state.error !== undefined && <Label className={classNames.error}>`{this.state.error}`</Label>}
       </Stack>

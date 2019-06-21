@@ -1,8 +1,8 @@
-export interface ITranspileOutput{
+export interface ITranspiledOutput{
     outputString?: string,
     error?: string
 }
 export interface IEvalCode{
-    outputHTML?: any,
+    eval?: any,
     error?: string;
 }
