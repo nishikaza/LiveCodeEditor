@@ -1,17 +1,8 @@
-import React from 'react';
 import { PrimaryButton, Stack, Label, mergeStyleSets } from 'office-ui-fabric-react';
 import { ITranspiledOutput } from '../transpiler/transpile.types';
 import React from "react";
-import {
-  PrimaryButton,
-  Stack,
-  Label,
-  mergeStyleSets
-} from "office-ui-fabric-react";
 import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
 initializeIcons();
-
-import Editor from './Editor';
 
 
 const classNames = mergeStyleSets({

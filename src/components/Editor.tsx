@@ -3,7 +3,7 @@ import React from 'react';
 import { IEditorProps } from './Editor.types';
 
 export class Editor extends React.Component<IEditorProps> {
-  private editor: monaco.editor.IStandaloneCodeEditor | undefined;
+  private editor: monaco.editor.IStandaloneCodeEditor;
   private editorRef = React.createRef<HTMLDivElement>();
 
   public componentDidMount() {
