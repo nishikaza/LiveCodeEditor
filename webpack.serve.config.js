@@ -8,7 +8,6 @@ const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 module.exports = webpackMerge(webpackServeConfig, {
-  mode: "production",
   module: {
       rules: [
         {
