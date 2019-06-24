@@ -5,6 +5,7 @@ const {
 } = require("just-scripts");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
   .BundleAnalyzerPlugin;
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 module.exports = webpackMerge(webpackServeConfig, {
   module: {
@@ -24,7 +25,6 @@ module.exports = webpackMerge(webpackServeConfig, {
       new MonacoWebpackPlugin({
         // available options are documented at https://github.com/Microsoft/monaco-editor-webpack-plugin#options
         languages: ['typescript'],
-        // features: ['coreCommands']
       }),
       new BundleAnalyzerPlugin(),
     ],

@@ -1,3 +1,6 @@
+import React from 'react';
+import { PrimaryButton, Stack, Label, mergeStyleSets } from 'office-ui-fabric-react';
+import { ITranspiledOutput } from '../transpiler/transpile.types';
 import React from "react";
 import {
   PrimaryButton,
@@ -8,185 +11,96 @@ import {
 import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
 initializeIcons();
 
-import * as typescript from "typescript";
 import Editor from './Editor';
-declare const ts: typeof typescript;
 
-const initialCode = `const text: string = "hello world";
-ReactDOM.render(<div>{text}</div>, document.getElementById('output'));`;
 
 const classNames = mergeStyleSets({
-  code: {
-    fontFamily: "monospace",
-    fontSize: 13,
-    lineHeight: "1.5"
-  },
-  renderSection: {
-    backgroundColor: "red"
-  },
   error: {
-    backgroundColor: "#FEF0F0",
-    color: "#FF5E79"
+    backgroundColor: '#FEF0F0',
+    color: '#FF5E79'
   },
-  editor: {
-    width: 800,
-    height: 500
+  component: {
+    backgroundColor: 'lightgray'
   }
 });
 
 interface IAppState {
-  code: string;
-  JScode: string;
   error?: string;
   editorHidden?: boolean;
-  editor: any;
-  currentTime: number;
+  editor?: any;
+  renderedCode?: any;
 }
 
 export class App extends React.Component {
   public state: IAppState = {
-    code: "",
-    JScode: "",
-    editor: undefined,
-    currentTime: 0
+    editorHidden: true
   };
 
-  private timer: any;
+  private onChange = (editor: any) => {
+    require.ensure([], require =>{
+      const transpileTSW = require('../transpiler/transpile').transpileTSW;
+      const _evalCode = require('../transpiler/transpile')._evalCode;
 
-  // private buttonClicked = (): void => {
-  //   import("./Editor").then(() => {
-  //     this.setState({
-  //       editor: monacoEditor.createEditor("")
-  //     });
-  //   });
-  //   if (this.state.editor == undefined) {
-  //     console.log(this.state.editor);
-  //     this.setState({
-  //       editor: monacoEditor.createEditor("")
-  //     });
-  //     console.log(this.state.editor);
-  //   }
-  //   if (this.state.editorHidden) {
-  //     this.setState({
-  //       editorHidden: false,
-  //       editor: monacoEditor.createEditor("tsdfdsfdsfdsfdsfdsfdsfdsfsdfdsfdsfdsfdsfdsest")
-  //     });
-  //   } else {
-  //     this.setState({
-  //        editorHidden: true,
-  //        editor: undefined
-  //       });
-  //   }
-  // };
+      transpileTSW(editor).then((output: ITranspiledOutput) => {
+        if(output.outputString){
+          const evaledCode = _evalCode(output.outputString);
+          console.log(evaledCode)
+          if(evaledCode.error){
+            this.setState({
+              error: evaledCode.error
+            });
+          }else{
+            this.setState({
+              error: undefined
+            })
+          }
+        }else {
+          this.setState({
+            error: output.error
+          });
+        }
+      });
+    });
+  };
 
-  decrementTimeRemaining = () => {
-    if (this.state.currentTime < 1) {
-      this.setState({
-        currentTime: this.state.currentTime + 1
+  private buttonClicked = (): void => {
+    if (this.state.editorHidden) {
+      require.ensure([], require => {
+        const Editor = require('../components/Editor').Editor;
+        this.setState({
+          editor: (
+            <div>
+              <div>
+                <Label>Typescript + React editor</Label>
+              </div>
+              <React.Suspense fallback={<div>Loading...</div>}>
+                <Editor width={800} height={500} code="" language="typescript" onChange={this.onChange} />
+              </React.Suspense>
+            </div>
+          ),
+          editorHidden: false
+        });
       });
     } else {
-      if (this.state.editor != undefined) {
-        let editorText = this.state.editor.getValue();
-        if (this.state.editor !== undefined) {
-          if (editorText != this.state.code) {
-            this.updateCodeTS(editorText);
-          }
-        }
-        clearInterval(this.timer!);
-        this.resetTimer();
-      }
+      this.setState({ editor: null, editorHidden: true });
     }
   };
 
-  private resetTimer = () => {
-    this.setState({
-      currentTime: 0
-    });
-    this.timer = setInterval(() => {
-      this.decrementTimeRemaining();
-    }, 1000);
-  };
-
-  public componentDidMount() {
-    this.resetTimer();
-    //this.createEditor();
-    this.updateCodeTS(initialCode);
-  }
-
-  public componentDidUpdate(prevProps: {}, prevState: IAppState) {
-    if (prevState.code != this.state.code) {
-      this._eval();
-    }
-  }
-
-  private updateCodeTS = (code: string) => {
-    try {
-      console.log("made i342t");
-      const compilerOptions = { module: ts.ModuleKind.None };
-      const transpiled = ts.transpileModule(code, {
-        compilerOptions: compilerOptions,
-        moduleName: "myMod"
-      });
-      this.setState({
-        code: code,
-        JScode: transpiled,
-        error: undefined
-      });
-      console.log(transpiled.outputText);
-    } catch (ex) {
-      this.setState({
-        code: code,
-        error: ex.message
-      });
-    }
-  };
-
-  private _eval = () => {
-    try {
-      eval(this.state.JScode);
-      this.setState({ error: undefined });
-    } catch (ex) {
-      this.setState({ error: ex.message });
-    }
-  };
-
-  render() {
-    let TSeditor = (
-      <div>
-        <div>
-          <Label>Typescript + React editor</Label>
-        </div>
-        {/* <div className={classNames.editor} id="editor" hidden = {this.state.editorHidden}/> */}
-        <Editor
-          width = {800}
-          height = {500}
-          value = ""
-          language = "typescript"
-          children = ""
-        />
-      </div>
-    );
-
-    let editor = (
-      <Stack style={{ backgroundColor: "lightgray" }} gap={4}>
-        <Stack.Item>{TSeditor}</Stack.Item>
-        <Stack.Item>
-          <div id="output" />
-        </Stack.Item>
-        <Stack.Item>
-          {this.state.error !== undefined && (
-            <Label className={classNames.error}>`{this.state.error}`</Label>
-          )}
-        </Stack.Item>
+  public render() {
+    const editor = (
+      <Stack className={classNames.component} gap={4}>
+        {!this.state.editorHidden && this.state.editor}
+        {this.state.error !== undefined && <Label className={classNames.error}>`{this.state.error}`</Label>}
       </Stack>
     );
 
     return (
       <div>
-        {/* <PrimaryButton onClick={this.buttonClicked} /> */}
-        {/* {!this.state.editorHidden && editor} */}
-        {editor}
+        <PrimaryButton onClick={this.buttonClicked} />
+        {!this.state.editorHidden && editor}
+        <div id='output'></div>
       </div>
     );
   }
 }
+

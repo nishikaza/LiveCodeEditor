@@ -1,69 +1,59 @@
-//import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
-import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import React from 'react';
+import { IEditorProps } from './Editor.types';
 
-interface IEditorProps {
-  width: number,
-  height: number,
-  value: string,
-  language: string
-}
-
-class Editor extends React.Component<IEditorProps> {
-
+export class Editor extends React.Component<IEditorProps> {
   private editor: monaco.editor.IStandaloneCodeEditor | undefined;
-  private codeValue: string;
+  private editorRef = React.createRef<HTMLDivElement>();
 
-  constructor(props: any) {
-    super(props);
-    this.editor = undefined;
-    this.codeValue = this.props.value;
-
+  public componentDidMount() {
+    monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+      allowNonTsExtensions: true,
+      target: monaco.languages.typescript.ScriptTarget.ES2015,
+      jsx: monaco.languages.typescript.JsxEmit.React,
+      alwaysStrict: true,
+      jsxFactory: 'React.createElement',
+      experimentalDecorators: true,
+      preserveConstEnums: true,
+      outDir: 'lib',
+      module: monaco.languages.typescript.ModuleKind.CommonJS,
+      lib: ['es5', 'dom'],
+    });
+    this._createEditor();
   }
 
-  componentDidMount() {
-    this.createEditor();
+  public componentWillUnmount() {
+    this._closeEditor();
   }
 
-  componentWillUnmount() {
-    this.closeEditor();
+  public render() {
+    const { width, height } = this.props;
+
+    const style = {
+      width: width,
+      height: height
+    };
+
+    return <div style={style} ref={this.editorRef} />;
   }
 
-  componentDidUpdate() {
-    if (this.props.value != this.codeValue) {
-      this.codeValue = this.props.value;
-      if (this.editor) {
-        this.editor.setValue(this.codeValue);
-      }
-    }
-  }
-
-  createEditor() {
-    this.editor = monaco.editor.create(document.getElementById("editor") as HTMLElement, {
-      value: this.props.value,
+  private _createEditor() {
+    console.log('creating editor')
+    this.editor = monaco.editor.create(this.editorRef.current!, {
+      value: this.props.code,
       language: this.props.language
     });
+
+    this.editor.onDidChangeModelContent(event => {
+      this.props.onChange(this.editor.getModel().uri);
+    });
+
+    console.log(this.editor.getModel().uri)
   }
 
-  closeEditor() {
+  private _closeEditor() {
     if (this.editor) {
       this.editor.dispose();
     }
   }
-
-  render() {
-    const { width, height } = this.props;
-    const style = {
-      width: width,
-      height: height
-    }
-    return (
-      <div style = {style} id = "editor" />
-    )
-  }
-
-
-
 }
-
-export default Editor;
