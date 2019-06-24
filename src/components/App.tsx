@@ -1,7 +1,6 @@
 import React from 'react';
 import { PrimaryButton, Stack, Label, mergeStyleSets } from 'office-ui-fabric-react';
-import { transpileTSW, _evalCode } from '../transpiler/transpile';
-import { ITranspiledOutput } from '../transpiler/transpile.types'
+import { ITranspiledOutput } from '../transpiler/transpile.types';
 
 const classNames = mergeStyleSets({
   error: {
@@ -26,24 +25,29 @@ export class App extends React.Component {
   };
 
   private onChange = (editor: any) => {
-    transpileTSW(editor).then((output: ITranspiledOutput) => {
-      if(output.outputString){
-        const evaledCode = _evalCode(output.outputString);
-        console.log(evaledCode)
-        if(evaledCode.error){
+    require.ensure([], require =>{
+      const transpileTSW = require('../transpiler/transpile').transpileTSW;
+      const _evalCode = require('../transpiler/transpile')._evalCode;
+
+      transpileTSW(editor).then((output: ITranspiledOutput) => {
+        if(output.outputString){
+          const evaledCode = _evalCode(output.outputString);
+          console.log(evaledCode)
+          if(evaledCode.error){
+            this.setState({
+              error: evaledCode.error
+            });
+          }else{
+            this.setState({
+              error: undefined
+            })
+          }
+        }else {
           this.setState({
-            error: evaledCode.error
+            error: output.error
           });
-        }else{
-          this.setState({
-            error: undefined
-          })
         }
-      }else {
-        this.setState({
-          error: output.error
-        });
-      }
+      });
     });
   };
 

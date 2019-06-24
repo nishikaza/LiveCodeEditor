@@ -28,6 +28,7 @@ export function _evalCode(code: string): IEvalCode {
         error: undefined
     };
     try{
+        console.log(code)
         output.eval = eval(code);
     }catch(ex){
         output.error = ex.message;
