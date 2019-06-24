@@ -1,50 +1,35 @@
-import * as ts from 'typescript';
-import { ITranspileOutput, IEvalCode } from './transpile.types';
-// import * as typescriptServices from 'monaco-editor/esm/vs/language/typescript/lib/typescriptServices';
 import * as monaco from 'monaco-editor';
+import { ITranspiledOutput, IEvalCode } from './transpile.types';
+import { TypeScriptWorker, EmitOutput } from './monacoTypescriptWorker';
 
-export function transpile(code: string): ITranspileOutput {
-    let output: ITranspileOutput ={
-        outputString: undefined,
-        error: undefined
-    };
-    try{
-        output.outputString =
-            ts.transpileModule(code, {
-            compilerOptions: {
-                module: ts.ModuleKind.ES2015
-            }
-        }).outputText;
-        output.outputString = output.outputString.substring(0, output.outputString.length-4)
-        return output
-    }catch(ex){
-        output.error = ex.message;
-        return output;
-    }
-}
-
-
-export function transpileTSW(code: string, model: monaco.editor.ITextModel) {
-    try{
-        monaco.languages.typescript.getTypeScriptWorker()
-            .then(_worker=>{_worker(model.uri)
-                .then((worker:any)=>{
-
-                console.log(worker)
-            })})
-    }catch(ex){
-        console.log(ex)
-    }
+export function transpileTSW(model: any): Promise<ITranspiledOutput> {
+    const ret = new Promise<ITranspiledOutput>((resolve) => {
+    monaco.languages.typescript.getTypeScriptWorker()
+        .then(_worker=>{_worker(model)
+            .then((worker: TypeScriptWorker)=>{ worker.getEmitOutput(model.toString())
+                .then((output: EmitOutput) =>{
+                    let transpiledOutput: ITranspiledOutput = { error: undefined, outputString: undefined};
+                    if(output.outputFiles[0]){
+                        transpiledOutput.outputString = output.outputFiles[0].text;
+                    }else{
+                        transpiledOutput.error = 'Could not transpile code';
+                    }
+                    resolve(transpiledOutput);
+                });
+            });
+        });
+    });
+    return ret;
 }
 
 export function _evalCode(code: string): IEvalCode {
     let output: IEvalCode = {
-        outputHTML: undefined,
+        eval: undefined,
         error: undefined
     };
     try{
-        output.outputHTML = eval(code);
-        console.log(eval(code))
+        console.log(code)
+        output.eval = eval(code);
     }catch(ex){
         output.error = ex.message;
     }

@@ -3,5 +3,5 @@ export interface IEditorProps {
   height: number;
   code: string;
   language: string;
-  onChange: (code: string, editor: any) => void;
+  onChange: (editor: any) => void;
 }
