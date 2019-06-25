@@ -37,7 +37,7 @@ export declare class TypeScriptWorker implements ts.LanguageServiceHost {
     getNavigationBarItems(fileName: string): Promise<ts.NavigationBarItem[]>;
     getFormattingEditsForDocument(fileName: string, options: ts.FormatCodeOptions): Promise<ts.TextChange[]>;
     getFormattingEditsForRange(fileName: string, start: number, end: number, options: ts.FormatCodeOptions): Promise<ts.TextChange[]>;
-    getFormattingEditsAfterKeystroke(fileName: string, postion: number, ch: string, options: ts.FormatCodeOptions): Promise<ts.TextChange[]>;
+    getFormatEditsAfterKeystroke(fileName: string, postion: number, ch: string, options: ts.FormatCodeOptions): Promise<ts.TextChange[]>;
     getEmitOutput(fileName: string): Promise<ts.EmitOutput>;
     updateExtraLibs(extraLibs: IExtraLibs): void;
 }

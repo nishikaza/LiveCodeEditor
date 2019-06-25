@@ -52,6 +52,7 @@ export class Editor extends React.Component<IEditorProps> {
 
   private _closeEditor() {
     if (this.editor) {
+      this.editor.getModel().dispose();
       this.editor.dispose();
     }
   }

@@ -1,6 +1,5 @@
 const {
   webpackMerge,
-  // htmlOverlay,
   webpackServeConfig
 } = require("just-scripts");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
@@ -16,14 +15,8 @@ module.exports = webpackMerge(webpackServeConfig, {
         }
       ],
     },
-      node: {
-      fs: 'empty',
-      module: 'empty',
-      net: 'empty'
-    },
     plugins: [
       new MonacoWebpackPlugin({
-        // available options are documented at https://github.com/Microsoft/monaco-editor-webpack-plugin#options
         languages: ['typescript'],
       }),
       new BundleAnalyzerPlugin(),
@@ -34,6 +27,7 @@ module.exports = webpackMerge(webpackServeConfig, {
     },
     {
       "react-dom": "ReactDOM"
-    }
+    },
+    {fs:    "commonjs fs"},
   ],
 });

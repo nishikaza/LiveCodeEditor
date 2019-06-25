@@ -23,14 +23,19 @@
     "webpack": "webpack"
   },
   "dependencies": {
+    "@types/babylon": "^6.16.5",
+    "@types/prettier": "^1.16.4",
     "@types/webpack-env": "^1.13.9",
     "@uifabric/fluent-theme": "^0.16.6",
+    "babylon": "^6.18.0",
+    "jscodeshift": "^0.6.4",
     "monaco-editor": "^0.17.0",
     "monaco-editor-webpack-plugin": "^1.7.0",
     "office-ui-fabric-react": "^6.165.0",
     "prettier": "^1.18.2",
     "react": "~16.8.0",
-    "react-dom": "~16.8.0"
+    "react-dom": "~16.8.0",
+    "recast": "^0.18.1"
   },
   "devDependencies": {
     "@types/jest": "^24.0.0",

@@ -3,7 +3,7 @@ import { ITranspiledOutput } from '../transpiler/transpile.types';
 import React from "react";
 import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
 initializeIcons();
-
+import { transformExample } from '../Examples/exampleTransform';
 
 const classNames = mergeStyleSets({
   error: {
@@ -18,8 +18,7 @@ const classNames = mergeStyleSets({
 interface IAppState {
   error?: string;
   editorHidden?: boolean;
-  editor?: any;
-  renderedCode?: any;
+  editor?: HTMLElement;
 }
 
 export class App extends React.Component {
@@ -76,6 +75,8 @@ export class App extends React.Component {
   };
 
   public render() {
+    console.log(transformExample('../Examples/ColorPicker.Basic.Example'))
+
     const editor = (
       <Stack className={classNames.component} gap={4}>
         {!this.state.editorHidden && this.state.editor}
