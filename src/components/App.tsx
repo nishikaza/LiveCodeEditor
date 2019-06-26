@@ -3,6 +3,7 @@ import { ITranspiledOutput } from '../transpiler/transpile.types';
 import React from "react";
 import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
 import { ITextModel } from './Editor.types';
+import { transformExample } from '../ExampleLoader/exampleTransform';
 initializeIcons();
 
 const classNames = mergeStyleSets({
@@ -52,6 +53,7 @@ export class App extends React.Component {
   };
 
   private buttonClicked = (): void => {
+    transformExample();
     if (this.state.editorHidden) {
       require.ensure([], require => {
         const Editor = require('../components/Editor').Editor;
