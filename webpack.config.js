@@ -12,15 +12,10 @@ const config = {
       }
     ]
   },
-  externals: [
-    {
-      react: "React"
-    },
-    {
-      "react-dom": "ReactDOM"
-    },
-    {fs:    "commonjs fs"}
-  ],
+  externals: {
+    react: "React",
+    "react-dom": "ReactDOM"
+  },
   plugins: [
     new MonacoWebpackPlugin({
       languages: ['typescript']

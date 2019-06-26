@@ -2,8 +2,8 @@ import { PrimaryButton, Stack, Label, mergeStyleSets } from 'office-ui-fabric-re
 import { ITranspiledOutput } from '../transpiler/transpile.types';
 import React from "react";
 import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
+import { ITextModel } from './Editor.types';
 initializeIcons();
-import { transformExample } from '../Examples/exampleTransform';
 
 const classNames = mergeStyleSets({
   error: {
@@ -26,11 +26,11 @@ export class App extends React.Component {
     editorHidden: true
   };
 
-  private onChange = (editor: any) => {
+  private onChange = (editor: ITextModel) => {
     require.ensure([], require =>{
-      const transpileTSW = require('../transpiler/transpile').transpileTSW;
+      const transpile = require('../transpiler/transpile').transpile;
       const _evalCode = require('../transpiler/transpile')._evalCode;
-      transpileTSW(editor).then((output: ITranspiledOutput) => {
+      transpile(editor).then((output: ITranspiledOutput) => {
         if(output.outputString){
           const evaledCode = _evalCode(output.outputString);
           if(evaledCode.error){
@@ -75,8 +75,6 @@ export class App extends React.Component {
   };
 
   public render() {
-    console.log(transformExample('../Examples/ColorPicker.Basic.Example'))
-
     const editor = (
       <Stack className={classNames.component} gap={4}>
         {!this.state.editorHidden && this.state.editor}

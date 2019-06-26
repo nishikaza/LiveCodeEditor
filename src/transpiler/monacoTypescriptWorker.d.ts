@@ -8,6 +8,9 @@ export interface IExtraLib {
 export interface IExtraLibs {
     [path: string]: IExtraLib;
 }
+
+//Since Monaco Editor does not have typings for the typescript worker, this file was added to provide the needed types
+
 export declare class TypeScriptWorker implements ts.LanguageServiceHost {
     private _ctx;
     private _extraLibs;

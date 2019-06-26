@@ -1,12 +1,13 @@
 import * as monaco from 'monaco-editor';
 import { ITranspiledOutput, IEvalCode } from './transpile.types';
 import { TypeScriptWorker, EmitOutput } from './monacoTypescriptWorker';
+import { ITextModel } from '../components/Editor.types';
 
-export function transpileTSW(model: any): Promise<ITranspiledOutput> {
+export function transpile(model: ITextModel): Promise<ITranspiledOutput> {
     const ret = new Promise<ITranspiledOutput>((resolve) => {
     monaco.languages.typescript.getTypeScriptWorker()
-        .then(_worker=>{_worker(model)
-            .then((worker: TypeScriptWorker)=>{ worker.getEmitOutput(model.toString())
+        .then(_worker=>{_worker(model.uri)
+            .then((worker: TypeScriptWorker)=>{ worker.getEmitOutput(model.uri.toString())
                 .then((output: EmitOutput) =>{
                     let transpiledOutput: ITranspiledOutput = { error: undefined, outputString: undefined};
                     if(output.outputFiles[0]){

@@ -1,5 +1,4 @@
 import * as babylon from 'babylon';
-import * as prettier from 'prettier';
 import * as fs from 'fs';
 import * as path from 'path';
 
