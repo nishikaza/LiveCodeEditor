@@ -1,10 +1,12 @@
+import React from 'react';
 import { PrimaryButton, Stack, Label, mergeStyleSets } from 'office-ui-fabric-react';
-import { ITranspiledOutput } from '../transpiler/transpile.types';
-import React from "react";
-import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
-import { ITextModel } from './Editor.types';
+import { ITextModel } from '../components/Editor.types';
 import { transformExample } from '../ExampleLoader/exampleTransform';
-initializeIcons();
+
+interface ITranspiledOutput {
+  outputString?: string;
+  error?: string;
+}
 
 const classNames = mergeStyleSets({
   error: {
@@ -27,23 +29,39 @@ export class App extends React.Component {
     editorHidden: true
   };
 
+  public render() {
+    const editor = (
+      <Stack className={classNames.component} gap={4}>
+        {this.state.editor}
+        {this.state.error !== undefined && <Label className={classNames.error}>{this.state.error}</Label>}
+      </Stack>
+    );
+
+    return (
+      <div>
+        <PrimaryButton onClick={this.buttonClicked} />
+        {!this.state.editorHidden && editor}
+        <div id="output" />
+      </div>
+    );
+  }
+
   private onChange = (editor: ITextModel) => {
-    require.ensure([], require =>{
-      const transpile = require('../transpiler/transpile').transpile;
-      const _evalCode = require('../transpiler/transpile')._evalCode;
+    require.ensure(['../transpiler/transpile'], require => {
+      const { evalCode, transpile } = require('../transpiler/transpile');
       transpile(editor).then((output: ITranspiledOutput) => {
-        if(output.outputString){
-          const evaledCode = _evalCode(output.outputString);
-          if(evaledCode.error){
+        if (output.outputString) {
+          const evalCodeError = evalCode(output.outputString);
+          if (evalCodeError) {
             this.setState({
-              error: evaledCode.error
+              error: evalCodeError.error
             });
-          }else{
+          } else {
             this.setState({
               error: undefined
-            })
+            });
           }
-        }else {
+        } else {
           this.setState({
             error: output.error
           });
@@ -53,7 +71,6 @@ export class App extends React.Component {
   };
 
   private buttonClicked = (): void => {
-    transformExample();
     if (this.state.editorHidden) {
       require.ensure([], require => {
         const Editor = require('../components/Editor').Editor;
@@ -64,7 +81,7 @@ export class App extends React.Component {
                 <Label>Typescript + React editor</Label>
               </div>
               <React.Suspense fallback={<div>Loading...</div>}>
-                <Editor width={800} height={500} code="" language="typescript" onChange={this.onChange} />
+                <Editor width={800} height={500} code={transformExample()} language="typescript" onChange={this.onChange} />
               </React.Suspense>
             </div>
           ),
@@ -75,22 +92,4 @@ export class App extends React.Component {
       this.setState({ editor: null, editorHidden: true });
     }
   };
-
-  public render() {
-    const editor = (
-      <Stack className={classNames.component} gap={4}>
-        {!this.state.editorHidden && this.state.editor}
-        {this.state.error !== undefined && <Label className={classNames.error}>`{this.state.error}`</Label>}
-      </Stack>
-    );
-
-    return (
-      <div>
-        <PrimaryButton onClick={this.buttonClicked} />
-        {!this.state.editorHidden && editor}
-        <div id='output'></div>
-      </div>
-    );
-  }
 }
-
