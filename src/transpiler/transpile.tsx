@@ -7,12 +7,11 @@ interface ITranspiledOutput {
   outputString?: string;
   error?: string;
 }
-//'DropdownBasicExample'
+
 export async function transpile(model: ITextModel): Promise<ITranspiledOutput> {
   const makeWorker = await monaco.languages.typescript.getTypeScriptWorker();
   const worker: TypeScriptWorker = await makeWorker(model.uri);
   const output: EmitOutput = await worker.getEmitOutput(model.uri.toString());
-  console.log(output)
   const transpiledOutput: ITranspiledOutput = { error: undefined, outputString: undefined };
   if (output.outputFiles[0]) {
     transpiledOutput.outputString = output.outputFiles[0].text;
@@ -25,7 +24,7 @@ export async function transpile(model: ITextModel): Promise<ITranspiledOutput> {
 export function evalCode(code: string): string | undefined {
   try {
     // tslint:disable:no-eval
-    eval(code);
+    eval(transformExample(code, 'DropdownBasicExample'));
   } catch (ex) {
     return ex.message;
   }

@@ -16,7 +16,7 @@ export class Editor extends React.Component<IEditorProps> {
       experimentalDecorators: true,
       preserveConstEnums: true,
       outDir: 'lib',
-      module: monaco.languages.typescript.ModuleKind.CommonJS,
+      module: monaco.languages.typescript.ModuleKind.ESNext,
       lib: ['es5', 'dom']
     });
     this._createEditor();

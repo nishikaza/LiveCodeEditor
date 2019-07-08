@@ -1,6 +1,6 @@
-export function transformExample (example?: string, className?: string) {
+export function transformExample (example: string, className: string) {
   const identifierPattern = new RegExp(/(?<=import { )(.*)(?= } from 'office-ui-fabric-react)/, 'g');
-  const importPattern = new RegExp(/(import.+?;\n)/,'g');
+  const importPattern = new RegExp(/(import.+?;)/,'g');
   let identifiers: string[] = [];
   let imports: string[] = [];
   let temp;
@@ -8,12 +8,14 @@ export function transformExample (example?: string, className?: string) {
   while(temp = identifierPattern.exec(example)) {
     temp[0].split(', ').map(identifier => identifiers.push(identifier));
   }
-
   while(temp = importPattern.exec(example)) {
     imports.push(temp[0]);
   }
 
-  imports.map(imp => example = example.replace(imp, ''));
+  imports.map(imp => {
+    example = example.replace(imp, '');
+  });
+
   example = example.replace('export ', '');
   example =
     'const {' +
@@ -22,10 +24,9 @@ export function transformExample (example?: string, className?: string) {
     example +
     `
     ReactDOM.render(
-    <Fabric>
-      <${className} />
-    </Fabric>,
-    document.getElementById('output')
-  );`;
-  return example
+      React.createElement(Fabric, null, React.createElement(${className}, null)),
+      document.getElementById('output')
+    );
+    `
+  return example;
 }
