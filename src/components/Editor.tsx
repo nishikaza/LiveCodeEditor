@@ -3,7 +3,7 @@ import React from 'react';
 import { IEditorProps } from './Editor.types';
 
 export class Editor extends React.Component<IEditorProps> {
-  private editor: monaco.editor.IStandaloneCodeEditor;
+  private editor: monaco.editor.IStandaloneCodeEditor | undefined;
   private editorRef = React.createRef<HTMLDivElement>();
 
   public componentDidMount() {
@@ -16,9 +16,8 @@ export class Editor extends React.Component<IEditorProps> {
       experimentalDecorators: true,
       preserveConstEnums: true,
       outDir: 'lib',
-      module: monaco.languages.typescript.ModuleKind.CommonJS,
-      lib: ['es5', 'dom'],
-
+      module: monaco.languages.typescript.ModuleKind.ESNext,
+      lib: ['es5', 'dom']
     });
     this._createEditor();
   }
@@ -40,13 +39,13 @@ export class Editor extends React.Component<IEditorProps> {
 
   private _createEditor() {
     this.editor = monaco.editor.create(this.editorRef.current!, {
-      model: monaco.editor.createModel(this.props.code, "typescript", monaco.Uri.parse("file:///main.tsx")),
+      model: monaco.editor.createModel(this.props.code, 'typescript', monaco.Uri.parse('file:///main.tsx')),
       value: this.props.code,
       language: this.props.language
     });
 
     this.editor.onDidChangeModelContent(event => {
-      this.props.onChange(this.editor.getModel().uri);
+      this.props.onChange(this.editor.getModel());
     });
   }
 

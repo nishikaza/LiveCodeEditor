@@ -1,7 +1,14 @@
+import { Uri } from 'monaco-editor';
+
+export interface ITextModel {
+  id: string;
+  uri: Uri;
+}
+
 export interface IEditorProps {
   width: number;
   height: number;
   code: string;
   language: string;
-  onChange: (editor: any) => void;
+  onChange: (code: ITextModel) => void;
 }

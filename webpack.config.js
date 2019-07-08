@@ -12,21 +12,16 @@ const config = {
       }
     ]
   },
-  externals: [
-    {
-      react: "React"
-    },
-    {
-      "react-dom": "ReactDOM"
-    }
-  ],
+  externals: {
+    react: "React",
+    "react-dom": "ReactDOM"
+  },
   plugins: [
     new MonacoWebpackPlugin({
-      // available options are documented at https://github.com/Microsoft/monaco-editor-webpack-plugin#options
       languages: ['typescript']
     }),
     new BundleAnalyzerPlugin(),
-  ]
+  ],
 };
 
 module.exports = webpackMerge(webpackConfig, config);
